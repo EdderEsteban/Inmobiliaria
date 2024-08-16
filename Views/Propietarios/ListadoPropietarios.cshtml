@@ -1,0 +1,46 @@
+@model IList<Inmobiliaria.Models.Propietarios>
+
+@{
+    ViewData["Title"] = "Propietarios";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Listado de Propietarios</h1>
+    <div class="text-start mb-3">
+        <a class="btn btn-primary material-symbols-outlined" asp-controller="Propietarios" asp-action="CrearPropietario" 
+        title="Crear Propietario">person_pin_circle</a>
+    </div>
+    <table id="tblPropietarios" class="table table-sm table-striped table-hover table-light">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>DNI</th>
+                <th>Direccion</th>
+                <th>Telefono</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var propietario in Model)
+        {
+            <tr>
+                <td>@propietario.Nombre</td>
+                <td>@propietario.Apellido</td>
+                <td>@propietario.Dni</td>
+                <td>@propietario.Direccion</td>
+                <td>@propietario.Telefono</td>
+                <td>@propietario.Correo</td>
+                <td>
+                    <a class="material-symbols-outlined" asp-controller="Propietario" asp-action="EditarPropietario"
+                       asp-route-id="@propietario.Id_Propietario" title="Editar">edit_note</a> |
+                    <a class="material-symbols-outlined" asp-controller="Propietario" asp-action="EliminarPropietario"
+                       asp-route-id="@propietario.Id_Propietario" title="Eliminar">delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+</div>
