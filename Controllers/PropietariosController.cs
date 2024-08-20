@@ -12,16 +12,13 @@ public class PropietariosController : Controller
     private readonly ILogger<PropietariosController> _logger;
 
     // Repositorio para interactuar con la base de datos
-    private readonly RepositorioPropietarios _repositorio;
+    private readonly RepositorioPropietarios repositorio;
 
     // Constructor para inyectar dependencias
-    public PropietariosController(
-        ILogger<PropietariosController> logger,
-        RepositorioPropietarios repositorio
-    )
+    public PropietariosController(ILogger<PropietariosController> logger)
     {
         _logger = logger;
-        repositorio = repositorio;
+        repositorio = new RepositorioPropietarios();
     }
 
     // Método para obtener la lista de propietarios
@@ -36,12 +33,12 @@ public class PropietariosController : Controller
     public IActionResult CrearPropietario()
     {
         // Crear un nuevo propietario vacío
-        return View(new Propietario());
+        return View(new Propietarios());
     }
 
     // Método para guardar un nuevo propietario
     [HttpPost]
-    public IActionResult GuardarPropietario(Propietario propietario)
+    public IActionResult GuardarPropietario(Propietarios propietario)
     {
         // Verificar si el modelo es válido
         if (ModelState.IsValid)
@@ -65,7 +62,7 @@ public class PropietariosController : Controller
 
     // Método para actualizar un propietario existente
     [HttpPost]
-    public IActionResult ModificarPropietario(Propietario propietario)
+    public IActionResult ModificarPropietario(Propietarios propietario)
     {
         // Verificar si el modelo es válido
         if (ModelState.IsValid)

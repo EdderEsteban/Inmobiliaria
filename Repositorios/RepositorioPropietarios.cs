@@ -1,8 +1,8 @@
 using Inmobiliaria.Models; 
 using MySql.Data.MySqlClient; 
  
-namespace InmobiliariaRepositorios
-{
+namespace Inmobiliaria.Repositorios;
+
     // Clase RepositorioPropietarios que hereda de RepositorioBD
     public class RepositorioPropietarios : InmobiliariaBD.RepositorioBD
     {
@@ -220,4 +220,3 @@ namespace InmobiliariaRepositorios
             return filasAfectadas;
         }
     }
-}
