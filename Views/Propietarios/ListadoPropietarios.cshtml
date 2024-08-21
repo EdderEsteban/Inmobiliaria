@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-2">
         <div class="mb-3">
-        <a class="btn btn-primary material-symbols-outlined left" asp-controller="Propietarios" asp-action="CrearPropietario"
+        <a class="btn btn-primary material-symbols-outlined left" asp-controller="Propietarios" asp-action="CrearPropietarios"
             title="Crear Propietario">person_pin_circle</a>
     </div>
     </div>
@@ -43,10 +43,10 @@
                                 <td>@propietario.Correo</td>
                                 <td>
                                     <a class="material-symbols-outlined" asp-controller="Propietario"
-                                        asp-action="EditarPropietario" asp-route-id="@propietario.Id_Propietario"
+                                        asp-action="EditarPropietarios" asp-route-id="@propietario.Id_Propietario"
                                         title="Editar">edit_note</a> |
                                     <a class="material-symbols-outlined" asp-controller="Propietario"
-                                        asp-action="EliminarPropietario" asp-route-id="@propietario.Id_Propietario"
+                                        asp-action="EliminarPropietarios" asp-route-id="@propietario.Id_Propietario"
                                         title="Eliminar">delete</a>
                                 </td>
                             </tr>
