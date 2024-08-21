@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Inmobiliaria.Models; 
+namespace Inmobiliaria.Models;
 
 
 public class Propietarios
@@ -18,7 +18,7 @@ public class Propietarios
 
     [Required(ErrorMessage = "El campo Dni es obligatorio.")]
     [RegularExpression(@"^\d{7,8}$", ErrorMessage = "El DNI debe contener exactamente 7 u 8 dígitos.")]
-    public int Dni { get; set; }
+    public string? Dni { get; set; }
 
     [Required(ErrorMessage = "El campo Dirección es obligatorio.")]
     [StringLength(100, ErrorMessage = "El campo Dirección debe tener como máximo {1} caracteres.")]
@@ -36,9 +36,9 @@ public class Propietarios
 
     public DateTime Fecha { get; set; } = DateTime.Now;
 
-    public Propietarios() 
-    { 
+    public Propietarios()
+    {
 
     }
-    
+
 }

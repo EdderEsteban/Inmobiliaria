@@ -79,9 +79,40 @@ public class PropietariosController : Controller
     // Método para eliminar un propietario existente
     public IActionResult EliminarPropietario(int id)
     {
-        // Eliminar el propietario desde el repositorio
-        repositorio.EliminarPropietario(id);
-        // Redirección a la lista de propietarios
+        try
+        {
+            // Intentar eliminar el propietario desde el repositorio
+            repositorio.EliminarPropietario(id);
+            // Establecer mensaje de éxito
+            TempData["SuccessMessage"] = "Propietario eliminado exitosamente.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            // Capturar la excepción específica y establecer el mensaje de error
+            TempData["ErrorMessage"] = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            // Capturar cualquier otra excepción y establecer un mensaje de error genérico
+            TempData["ErrorMessage"] = $"Ocurrió un error al eliminar el propietario. {ex.Message}";
+        }
+
+        // Redirigir a la lista de propietarios
         return RedirectToAction(nameof(ListadoPropietarios));
     }
+
+    // Método para buscar un propietario
+    public IActionResult BuscarPropietarios()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Search(Propietarios busqueda)
+    {
+        var propietario = repositorio.BuscarPropietario(busqueda);
+
+        return View(propietario);
+    }
+
 }

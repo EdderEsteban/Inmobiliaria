@@ -1,8 +1,25 @@
 @model IList<Inmobiliaria.Models.Propietarios>
 
-@{
+@{<!-- Titulo y Alert -->
     ViewData["Title"] = "Propietarios";
 }
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+       <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 
 <div class="text-center mb-4">
     <h1 class="display-4">Listado de Propietarios</h1>
@@ -12,7 +29,7 @@
 <div class="row">
     <div class="col-2">
         <div class="mb-3">
-        <a class="btn btn-primary material-symbols-outlined left" asp-controller="Propietarios" asp-action="CrearPropietarios"
+        <a class="btn btn-primary material-symbols-outlined left" asp-controller="Propietarios" asp-action="CrearPropietario"
             title="Crear Propietario">person_pin_circle</a>
     </div>
     </div>
@@ -42,11 +59,11 @@
                                 <td>@propietario.Telefono</td>
                                 <td>@propietario.Correo</td>
                                 <td>
-                                    <a class="material-symbols-outlined" asp-controller="Propietario"
-                                        asp-action="EditarPropietarios" asp-route-id="@propietario.Id_Propietario"
+                                    <a class="material-symbols-outlined" asp-controller="Propietarios"
+                                        asp-action="EditarPropietario" asp-route-id="@propietario.Id_Propietario"
                                         title="Editar">edit_note</a> |
-                                    <a class="material-symbols-outlined" asp-controller="Propietario"
-                                        asp-action="EliminarPropietarios" asp-route-id="@propietario.Id_Propietario"
+                                    <a class="material-symbols-outlined" asp-controller="Propietarios"
+                                        asp-action="EliminarPropietario" asp-route-id="@propietario.Id_Propietario"
                                         title="Eliminar">delete</a>
                                 </td>
                             </tr>

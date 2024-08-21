@@ -1,5 +1,9 @@
 html {
   font-size: 14px;
+  background-image: url('/img/fondo.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 @media (min-width: 768px) {
@@ -19,4 +23,5 @@ html {
 
 body {
   margin-bottom: 60px;
+  ;
 }
