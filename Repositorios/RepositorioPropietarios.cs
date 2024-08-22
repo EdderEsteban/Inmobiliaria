@@ -257,7 +257,7 @@ public class RepositorioPropietarios : InmobiliariaBD.RepositorioBD
         catch (Exception ex)
         {
             // Manejo de excepciones y registro del error
-            throw new Exception("Error al eliminar el propietario", ex);
+            throw new Exception($"Error al eliminar el propietario {ex.Message}");
         }
         return filasAfectadas;
     }
