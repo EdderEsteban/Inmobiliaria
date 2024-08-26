@@ -4,50 +4,57 @@
     ViewData["Title"] = "Propietarios";
 }
 
-<div class="text-center mb-4">
+<div class="text-center">
     <h2 class="display-4">Crear Propietario</h2>
 </div>
-
 <div class="container">
-    <div class="row">
-        <div class="col-md-4 card">
-            <h2>Crear Propietario</h2>
-            <form method="post" asp-action="GuardarPropietario">
-                <div class="form-group">
+    <form method="post" class="row g-3" asp-action="GuardarPropietario">
+        <fieldset>
+            <legend>Nuevo Propietario</legend>
+            <div class="row">
+                <div class="form-floating col-3">
+                    <input asp-for="Nombre" class="form-control" placeholder="Nombre" />
                     <label asp-for="Nombre" class="control-label">Nombre</label>
-                    <input asp-for="Nombre" class="form-control" />
                     <span asp-validation-for="Nombre" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-floating col-3">
+                    <input asp-for="Apellido" class="form-control" placeholder="Apellido" />
                     <label asp-for="Apellido" class="control-label">Apellido</label>
-                    <input asp-for="Apellido" class="form-control" />
                     <span asp-validation-for="Apellido" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+            </div>
+            <div class="row mt-3">
+                <div class="form-floating col-3">
+                    <input asp-for="Dni" class="form-control" placeholder="Dni" />
                     <label asp-for="Dni" class="control-label">Dni</label>
-                    <input asp-for="Dni" class="form-control"/>
                     <span asp-validation-for="Dni" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-floating col-3">
+                    <input asp-for="Direccion" class="form-control" placeholder="Direccion" />
                     <label asp-for="Direccion" class="control-label">Direccion</label>
-                    <input asp-for="Direccion" class="form-control" />
                     <span asp-validation-for="Direccion" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+            </div>
+            <div class="row mt-3">
+                <div class="form-floating col-3">
+                    <input asp-for="Telefono" class="form-control" placeholder="Telefono" />
                     <label asp-for="Telefono" class="control-label">Telefono</label>
-                    <input asp-for="Telefono" class="form-control" />
                     <span asp-validation-for="Telefono" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Correo" class="control-label">Correo</label>
-                    <input asp-for="Correo" class="form-control" />
+                <div class="form-floating col-3">
+                    <input for="Correo" class="form-control" placeholder="name@example.com" />
+                    <label asp-for="Correo" class="control-label" id="Correo">Correo</label>
                     <span asp-validation-for="Correo" class="text-danger"></span>
+
                 </div>
-                <div class="form-group">
+            </div>
+            <div class="row mt-3">
+                <div class="form-group col-3">
                     <input type="submit" value="Guardar" class="btn btn-success" />
-                    <a asp-action="ListadoPropietarios" class="btn btn-primary" >Volver</a>
+                    <a asp-action="ListadoPropietarios" class="btn btn-primary">Volver</a>
                 </div>
-            </form>
-        </div>
-    </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
 </div>
