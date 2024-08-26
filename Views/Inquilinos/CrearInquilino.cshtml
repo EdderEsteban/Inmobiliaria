@@ -3,56 +3,48 @@
     ViewData["Title"] = "Inquilinos";
 }
 
-<div class="text-center">
-    <h2 class="display-4">Crear Inquilino</h2>
-</div>
-<div class="container col-6">
-    <form method="post" class="row" -action="GuardarInquilino">
-        <fieldset>
-            <legend>Nuevo Inquilino</legend>
-            <div class="row mt-3">
-                <div class="form-floating col-6">
-                    <input asp-for="Nombre" class="form-control" placeholder="Nombre" />
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 card">
+            <h2>Crear Inquilino</h2>
+
+            <form method="post" asp-action="GuardarInquilino">
+                <div class="form-group">
                     <label asp-for="Nombre" class="control-label">Nombre</label>
+                    <input asp-for="Nombre" class="form-control" />
                     <span asp-validation-for="Nombre" class="text-danger"></span>
                 </div>
-                <div class="form-floating col-6">
-                    <input asp-for="Apellido" class="form-control" placeholder="Apellido" />
+                <div class="form-group">
                     <label asp-for="Apellido" class="control-label">Apellido</label>
+                    <input asp-for="Apellido" class="form-control" />
                     <span asp-validation-for="Apellido" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="row mt-3">
-                <div class="form-floating col-6 ">
-                    <input asp-for="Dni" class="form-control" placeholder="Dni" />
+                <div class="form-group">
                     <label asp-for="Dni" class="control-label">Dni</label>
+                    <input asp-for="Dni" class="form-control" />
                     <span asp-validation-for="Dni" class="text-danger"></span>
                 </div>
-                <div class="form-floating col-6">
-                    <input asp-for="Direccion" class="form-control" placeholder="Direccion" />
+                <div class="form-group">
                     <label asp-for="Direccion" class="control-label">Direccion</label>
+                    <input asp-for="Direccion" class="form-control" />
                     <span asp-validation-for="Direccion" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="row mt-3">
-                <div class="form-floating col-6">
-                    <input asp-for="Telefono" class="form-control" placeholder="Telefono" />
+                <div class="form-group">
                     <label asp-for="Telefono" class="control-label">Telefono</label>
+                    <input asp-for="Telefono" class="form-control" />
                     <span asp-validation-for="Telefono" class="text-danger"></span>
                 </div>
-                <div class="form-floating col-6">
-                    <input for="Correo" class="form-control" placeholder="name@example.com" />
-                    <label asp-for="Correo" class="control-label" id="Correo">Correo</label>
+                <div class="form-group">
+                    <label asp-for="Correo" class="control-label">Correo</label>
+                    <input asp-for="Correo" class="form-control" />
                     <span asp-validation-for="Correo" class="text-danger"></span>
-
                 </div>
-            </div>
-            <div class="row mt-3">
-                <div class="form-group col-12" style="background-color: blue;">
+                <div class="form-group mt-2">
                     <input type="submit" value="Guardar" class="btn btn-success" />
-                    <a asp-action="ListadoPropietarios" class="btn btn-primary">Volver</a>
+                    <a asp-action="ListadoInquilinos" class="btn btn-primary" >Volver</a>
                 </div>
-            </div>
-        </fieldset>
-    </form>
+            </form>
+        </div>
+    </div>
 </div>
