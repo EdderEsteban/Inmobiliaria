@@ -107,12 +107,16 @@ public class PropietariosController : Controller
         return View();
     }
 
+    // Método para recibir el formulario Search
     [HttpPost]
-    public IActionResult Search(Propietarios busqueda)
+    public IActionResult BuscarProp([FromBody] BusquedaPropietarios busqueda)
     {
-        var propietario = repositorio.BuscarPropietario(busqueda);
+        Console.WriteLine(
+            $"Busqueda en Controller: {busqueda.Nombre}, {busqueda.Apellido}, {busqueda.Dni}");
 
-        return View(propietario);
+        var resultados = repositorio.BuscarPropietarios(busqueda);
+
+        // Devuelve los resultados como JSON
+        return Json(resultados);
     }
-
 }
