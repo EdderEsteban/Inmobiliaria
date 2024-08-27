@@ -10,6 +10,7 @@ public class InmuebleTipo
     [StringLength(50, ErrorMessage = "El campo Nombre debe tener como máximo {1} caracteres.")]
     public string? Tipo { get; set; }
 
+
     public InmuebleTipo()
     {
 
