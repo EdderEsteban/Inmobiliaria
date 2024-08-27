@@ -111,11 +111,7 @@ public class PropietariosController : Controller
     [HttpPost]
     public IActionResult BuscarProp([FromBody] BusquedaPropietarios busqueda)
     {
-        Console.WriteLine(
-            $"Busqueda en Controller: {busqueda.Nombre}, {busqueda.Apellido}, {busqueda.Dni}");
-
         var resultados = repositorio.BuscarPropietarios(busqueda);
-
         // Devuelve los resultados como JSON
         return Json(resultados);
     }

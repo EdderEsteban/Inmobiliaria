@@ -1,42 +1,45 @@
-* {
-  background-color: transparent /*!important*/;
-}
+ /* * {
+   background-color: transparent !important;
+ }
 
-html {
-  font-size: 14px;
-  background-image: url("/img/fondo.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
+ html {
+   font-size: 14px;
+   background-image: url("/img/fondo.jpg");
+   background-size: cover;
+   background-repeat: no-repeat;
+   background-attachment: fixed;
+ } */
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
+ @media (min-width: 768px) {
+   html {
+     font-size: 16px;
+   }
+ }
 
-.btn:focus,
-.btn:active:focus,
-.btn-link.nav-link:focus,
-.form-control:focus,
-.form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
+ .btn:focus,
+ .btn:active:focus,
+ .btn-link.nav-link:focus,
+ .form-control:focus,
+ .form-check-input:focus {
+   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+ }
 
-html {
-  position: relative;
-  min-height: 100%;
-}
+ html {
+   position: relative;
+   min-height: 100%;
+ }
 
-body {
-  margin-bottom: 60px;
-}
+ body {
+   margin-bottom: 60px;
+ }
 
-.personalBlur {
-  background-color: rgba(255, 255, 255, 0.5); /* Fondo blanco con 50% de opacidad */
-  backdrop-filter: blur(10px); /* Aplica un desenfoque de 10px */
-  -webkit-backdrop-filter: blur(10px); /* Soporte para Safari */
-  border: none; /* Opcional: Eliminar el borde de la tarjeta */
-}
-
+ .personalBlur {
+   background-color: rgba(255, 255, 255, 0.5);
+   /* Fondo blanco con 50% de opacidad */
+   backdrop-filter: blur(10px);
+   /* Aplica un desenfoque de 10px */
+   -webkit-backdrop-filter: blur(10px);
+   /* Soporte para Safari */
+   border: none;
+   /* Opcional: Eliminar el borde de la tarjeta */
+ }

@@ -210,7 +210,7 @@ public class RepositorioPropietarios : InmobiliariaBD.RepositorioBD
                     );
                     command.Parameters.AddWithValue(
                         $"@{nameof(Propietarios.Apellido)}",
-                        propietario.Apellido
+                        propietario.Apellido 
                     );
                     command.Parameters.AddWithValue(
                         $"@{nameof(Propietarios.Dni)}",

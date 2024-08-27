@@ -58,6 +58,12 @@ function buscarInquilinos() {
             <td>${propietario.direccion}</td>
             <td>${propietario.telefono}</td>
             <td>${propietario.correo}</td>
+            <td>
+              <a href="/Propietarios/EditarPropietario/${propietario.id_Propietario}" 
+                title="Editar" class="material-symbols-outlined">edit_note</a>
+              <a href="/Propietarios/EliminarPropietario/${propietario.id_Propietario}" 
+               title="Eliminar" class="material-symbols-outlined">delete</a>
+            </td>
           `;
           tableBody.appendChild(row);
         });

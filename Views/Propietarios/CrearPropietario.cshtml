@@ -11,39 +11,40 @@
 <div class="container col-8">
     <h4>Nuevo Propietario</h4>
     <form method="post" asp-action="GuardarPropietario">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row mt-3">
-            <div class="form-group col-6">
-                <label asp-for="Nombre" class="control-label">Nombre</label>
-                <input asp-for="Nombre" class="form-control" />
+            <div class="form-floating mb-3 col-6">
+                <input type="text" asp-for="Nombre" class="form-control" placeholder="" />
+                <label asp-for="Nombre" class="control-label" id="Nombre">Nombre</label>
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
-            <div class="form-group col-6">
+            <div class="form-floating mb-3 col-6">
+                <input asp-for="Apellido" class="form-control" placeholder="" />
                 <label asp-for="Apellido" class="control-label">Apellido</label>
-                <input asp-for="Apellido" class="form-control" />
                 <span asp-validation-for="Apellido" class="text-danger"></span>
             </div>
         </div>
         <div class="row mt-3">
-            <div class="form-group col-6">
+            <div class="form-floating mb-3 col-6">
+                <input asp-for="Dni" class="form-control" placeholder="" />
                 <label asp-for="Dni" class="control-label">Dni</label>
-                <input asp-for="Dni" class="form-control" />
                 <span asp-validation-for="Dni" class="text-danger"></span>
             </div>
-            <div class="form-group col-6">
+            <div class="form-floating mb-3 col-6">
+                <input asp-for="Direccion" class="form-control" placeholder="" />
                 <label asp-for="Direccion" class="control-label">Direccion</label>
-                <input asp-for="Direccion" class="form-control" />
                 <span asp-validation-for="Direccion" class="text-danger"></span>
             </div>
         </div>
         <div class="row mt-3">
-            <div class="form-group col-6">
+            <div class="form-floating mb-3 col-6">
+                <input asp-for="Telefono" class="form-control" placeholder="" />
                 <label asp-for="Telefono" class="control-label">Telefono</label>
-                <input asp-for="Telefono" class="form-control" />
                 <span asp-validation-for="Telefono" class="text-danger"></span>
             </div>
-            <div class="form-group col-6">
+            <div class="form-floating mb-3 col-6">
+                <input asp-for="Correo" class="form-control" placeholder="" />
                 <label asp-for="Correo" class="control-label">Correo</label>
-                <input asp-for="Correo" class="form-control" />
                 <span asp-validation-for="Correo" class="text-danger"></span>
             </div>
         </div>
