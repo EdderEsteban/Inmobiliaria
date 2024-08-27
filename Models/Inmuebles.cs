@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Inmobiliaria.Models;
 
-public class Inmueble
+public class Inmuebles
 {
     [Key]
     public int Id_inmueble { get; set; }

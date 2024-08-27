@@ -258,12 +258,12 @@ public class RepositorioPropietarios : InmobiliariaBD.RepositorioBD
                 var sql =
                     @$"SELECT COUNT(*) 
                 FROM inmueble 
-                WHERE {nameof(Inmueble.Id_propietario)} = @{nameof(Inmueble.Id_propietario)}";
+                WHERE {nameof(Inmuebles.Id_propietario)} = @{nameof(Inmuebles.Id_propietario)}";
 
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue(
-                        $"@{nameof(Inmueble.Id_propietario)}",
+                        $"@{nameof(Inmuebles.Id_propietario)}",
                         idPropietario
                     );
 

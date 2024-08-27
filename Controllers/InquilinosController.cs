@@ -90,23 +90,23 @@ public class InquilinosController : Controller
         return RedirectToAction(nameof(ListadoInquilinos));
     }
 
-    
-        // Método para buscar un inquilino
-        public IActionResult BuscarInquilinos()
-        {
-            return View();
-        }
-    
-        // Método para recibir el formulario Search
-        [HttpPost]
-        public IActionResult BuscarInq([FromBody] BusquedaInquilinos busqueda)
-        {
-            Console.WriteLine(
-                $"Busqueda en Controller: {busqueda.Nombre}, {busqueda.Apellido}, {busqueda.Dni}");
-    
-            var resultados = repositorio.BuscarInquilinos(busqueda);
-    
-            // Devuelve los resultados como JSON
-            return Json(resultados);
-        }
+
+    // Método para buscar un inquilino
+    public IActionResult BuscarInquilinos()
+    {
+        return View();
+    }
+
+    // Método para recibir el formulario Search
+    [HttpPost]
+    public IActionResult BuscarInq([FromBody] BusquedaInquilinos busqueda)
+    {
+        Console.WriteLine(
+            $"Busqueda en Controller: {busqueda.Nombre}, {busqueda.Apellido}, {busqueda.Dni}");
+
+        var resultados = repositorio.BuscarInquilinos(busqueda);
+
+        // Devuelve los resultados como JSON
+        return Json(resultados);
+    }
 }
