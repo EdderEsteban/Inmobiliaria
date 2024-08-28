@@ -28,91 +28,100 @@ public class InmueblesController : Controller
         var lista = repositorio.ListarTodosInmuebles();
         return View(lista);
     }
-/*
-    // Método para crear un nuevo propietario
-    public IActionResult CrearPropietario()
-    {
-        // Crear un nuevo propietario vacío
-        return View(new Propietarios());
-    }
 
-    // Método para guardar un nuevo propietario
-    [HttpPost]
-    public IActionResult GuardarPropietario(Propietarios propietario)
+    // Metodo para listar todos los Inmuebles alquilados
+    /*public IActionResult ListadoInmueblesAlquilados()
     {
-        // Verificar si el modelo es válido
-        if (ModelState.IsValid)
-        {
-            // Guardar el propietario en el repositorio
-            repositorio.GuardarNuevo(propietario);
-            // Redirección a la lista de propietarios
-            return RedirectToAction(nameof(ListadoPropietarios));
-        }
-        // Si el modelo no es válido, devolver la vista con los errores
-        return View("CrearPropietario", propietario);
-    }
+        // Enviar la lista de Inmuebles Alquilados
+        var lista = repositorio.ListarInmueblesAlquilados();
 
-    // Método para editar un propietario existente
-    public IActionResult EditarPropietario(int id)
-    {
-        // Obtener el propietario desde el repositorio
-        var propietario = repositorio.ObtenerPropietario(id);
-        return View(propietario);
-    }
+        // Enviar la lista de los Contratos
+        RepositorioContrato repoContrato = new RepositorioContrato();
+        var contratos = repoContrato.ListarContratos();
+        ViewBag.contratos = contratos;
 
-    // Método para actualizar un propietario existente
-    [HttpPost]
-    public IActionResult ModificarPropietario(Propietarios propietario)
-    {
-        // Verificar si el modelo es válido
-        if (ModelState.IsValid)
-        {
-            // Actualizar el propietario en el repositorio
-            repositorio.ActualizarPropietario(propietario);
-            // Redirección a la lista de propietarios
-            return RedirectToAction(nameof(ListadoPropietarios));
-        }
-        // Si el modelo no es válido, devolver la vista con los errores
-        return View("EditarPropietario", propietario);
-    }
+        // Enviar la lista de Inquilinos
+        RepositorioInquilino repoInquilino = new RepositorioInquilino();
+        var inquilinos = repoInquilino.ListarInquilinos();
+        ViewBag.inquilinos = inquilinos;
 
-    // Método para eliminar un propietario existente
-    public IActionResult EliminarPropietario(int id)
-    {
-        try
-        {
-            // Intentar eliminar el propietario desde el repositorio
-            repositorio.EliminarPropietario(id);
-            // Establecer mensaje de éxito
-            TempData["SuccessMessage"] = "Propietario eliminado exitosamente.";
-        }
-        catch (InvalidOperationException ex)
-        {
-            // Capturar la excepción específica y establecer el mensaje de error
-            TempData["ErrorMessage"] = ex.Message;
-        }
-        catch (Exception ex)
-        {
-            // Capturar cualquier otra excepción y establecer un mensaje de error genérico
-            TempData["ErrorMessage"] = $"Ocurrió un error al eliminar el propietario. {ex.Message}";
-        }
-
-        // Redirigir a la lista de propietarios
-        return RedirectToAction(nameof(ListadoPropietarios));
-    }
-
-    // Método para buscar un propietario
-    public IActionResult BuscarPropietarios()
-    {
-        return View();
-    }
-
-    // Método para recibir el formulario Search
-    [HttpPost]
-    public IActionResult BuscarProp([FromBody] BusquedaPropietarios busqueda)
-    {
-        var resultados = repositorio.BuscarPropietarios(busqueda);
-        // Devuelve los resultados como JSON
-        return Json(resultados);
+        return View(lista);
     }*/
+
+    // Metodo para editar un inmueble
+    public IActionResult EditarInmueble(int id)
+    {
+        //Enviar la lista de tipos de inmueble
+        var listTipos = repositorio.ListarTiposInmueble();
+        ViewBag.tipos = listTipos;
+
+        //Enviar la lista de propietarios
+        RepositorioPropietarios repoProp = new RepositorioPropietarios();
+        var listPropietarios = repoProp.ListarPropietarios();
+        ViewBag.propietarios = listPropietarios;
+
+        var inmueble = repositorio.ObtenerInmueble(id);
+
+        return View(inmueble);
+    }
+
+    // Metodo para modificar un inmueble
+    public IActionResult ModificarInmueble(Inmuebles inmueble)
+    {
+        if (ModelState.IsValid)
+        {
+            // Crear el repositorio de Contratos
+            RepositorioContratos repoContrato = new RepositorioContratos();
+
+            // Obtener todos los contratos asociados al inmueble
+            var contratosDelInmueble = repoContrato.ListarContratosPorInmueble(inmueble.Id_inmueble);
+
+            // Verificar si existen contratos asociados al inmueble
+            if (contratosDelInmueble.Count > 0)
+            {
+                // Si hay contratos, ver si Inmueble.Disponible es 1 o 0
+                Inmuebles inmuebleOriginal = repositorio.ObtenerInmueble(inmueble.Id_inmueble); // Obtener el inmueble original de la BD
+                if (inmuebleOriginal != null)
+                {
+                    if (inmuebleOriginal.Disponible == true)
+                    {
+                        // Permitir la modificación de todos los campos
+                        repositorio.ActualizarInmueble(inmueble);
+                    }
+                    else
+                    {
+                        // Permitir la modificación de todos los campos excepto Disponible
+                        inmueble.Disponible = inmuebleOriginal.Disponible; // Mantener el valor original de Disponible
+                        repositorio.ActualizarInmuebleExceptoDisponible(inmueble);
+                        TempData["AlertMessage"] =
+                            "Se actualizó los datos excepto Disponible, ya que el inmueble tiene un contrato activo.";
+                    }
+                }
+                else
+                {
+                    // No se encontro el inmueble original en la BD
+                    return View("EditarInmueble", inmueble);
+                }
+            }
+            else
+            {
+                // No hay contratos asociados, permitir la modificación de todos los campos
+                repositorio.ActualizarInmueble(inmueble);
+            }
+
+            return RedirectToAction(nameof(ListadoTodosInmuebles));
+        }
+
+        return View("EditarInmueble", inmueble);
+    }
+
+
+
+
+
+
+
+
+
+
 }

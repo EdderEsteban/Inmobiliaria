@@ -101,9 +101,6 @@ public class InquilinosController : Controller
     [HttpPost]
     public IActionResult BuscarInq([FromBody] BusquedaInquilinos busqueda)
     {
-        Console.WriteLine(
-            $"Busqueda en Controller: {busqueda.Nombre}, {busqueda.Apellido}, {busqueda.Dni}");
-
         var resultados = repositorio.BuscarInquilinos(busqueda);
 
         // Devuelve los resultados como JSON
