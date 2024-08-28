@@ -23,20 +23,21 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Inmobiliaria</a>
+                <a class="navbar-brand"  asp-area="" asp-controller="Home" asp-action="Index"><i class="material-symbols-outlined">apartment</i>Inmobiliaria</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                    <i class="navbar-toggler-icon"></i>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home"
-                                asp-action="Index"></i>Inicio</a>
+                            <a class="nav-link text-white ml-5" asp-area="" asp-controller="Home"
+                                asp-action="Index"><i class="material-symbols-outlined">home</i>Inicio</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">Propietario</a>
+                                data-bs-toggle="dropdown" aria-expanded="false"><i class="material-symbols-outlined">
+                                person_pin_circle</i>Propietario</a>
                             <ul class="dropdown-menu">
                                 <li><a class="nav-link text-black" asp-area="" asp-controller="Propietarios"
                                         asp-action="ListadoPropietarios"></i>Listado</a></li>
@@ -56,7 +57,8 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">Inquilino</a>
+                                data-bs-toggle="dropdown" aria-expanded="false"><i class="material-symbols-outlined">
+                                location_away</i>Inquilino</a>
                             <ul class="dropdown-menu">
                                 <li><a class="nav-link text-black" asp-area="" asp-controller="Inquilinos"
                                         asp-action="ListadoInquilinos"></i>Listado</a></li>
@@ -75,7 +77,8 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">Inmuebles</a>
+                                data-bs-toggle="dropdown" aria-expanded="false"><i class="material-symbols-outlined">
+                                real_estate_agent</i>Inmuebles</a>
                             <ul class="dropdown-menu">
                                 <li><a class="nav-link text-black" asp-area="" asp-controller="Inmuebles"
                                         asp-action="ListadoTodosInmuebles"></i>Listado de todos los Inmuebles</a></li>
@@ -103,11 +106,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - Inmobiliaria - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     <!-- jQuery -->
