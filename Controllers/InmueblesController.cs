@@ -104,7 +104,7 @@ public class InmueblesController : Controller
             if (contratosDelInmueble.Count > 0)
             {
                 // Si hay contratos, ver si Inmueble.Disponible es 1 o 0
-                Inmuebles inmuebleOriginal = repositorio.ObtenerInmueble(inmueble.Id_inmueble); // Obtener el inmueble original de la BD
+                Inmuebles? inmuebleOriginal = repositorio.ObtenerInmueble(inmueble.Id_inmueble); // Obtener el inmueble original de la BD
                 if (inmuebleOriginal != null)
                 {
                     if (inmuebleOriginal.Disponible == true)
@@ -133,7 +133,7 @@ public class InmueblesController : Controller
                 repositorio.ActualizarInmueble(inmueble);
             }
             // Obtener el nombre de la vista original desde TempData
-            string viewName = TempData["viewName"]?.ToString();
+            string viewName = TempData["viewName"]?.ToString() ?? string.Empty;
             if (!string.IsNullOrEmpty(viewName))
             {
                 return RedirectToAction(viewName);
@@ -190,7 +190,7 @@ public class InmueblesController : Controller
 
         //Enviar el Contratos
         RepositorioContratos repoContrato = new RepositorioContratos();
-        var contrato = repoContrato.ObtenerContratoInmueble(inmueble.Id_inmueble);
+        var contrato = repoContrato.ObtenerContratoInmueble(inmueble?.Id_inmueble ?? 0);
         ViewBag.contrato = contrato;
 
         //Enviar el propietarios
