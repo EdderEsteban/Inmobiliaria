@@ -107,6 +107,23 @@ public class PropietariosController : Controller
         return View();
     }
 
+    // Método para obtener inmuebles por propietario
+    [HttpPost]
+    public IActionResult ObtenerInmueblesPorPropietario([FromBody] int idPropietario)
+    {
+        try
+        {
+            RepositorioInmuebles repositorioInmuebles = new RepositorioInmuebles();
+            var inmuebles = repositorioInmuebles.ListarInmueblesPorPropietario(idPropietario);
+            return Json(inmuebles);
+        }
+        catch (Exception ex)
+        {
+            // Manejo de errores más detallado si es necesario
+            return StatusCode(500, $"Error al obtener inmuebles: {ex.Message}");
+        }
+    }
+
     // Método para recibir el formulario Search
     [HttpPost]
     public IActionResult BuscarProp([FromBody] BusquedaPropietarios busqueda)
