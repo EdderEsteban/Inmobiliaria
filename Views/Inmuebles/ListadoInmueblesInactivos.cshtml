@@ -21,7 +21,7 @@
 }
 
 <div class="text-center mb-4">
-    <h1 class="display-4">Listado de Inmuebles Alquilados</h1>
+    <h1 class="display-4">Listado de Inmuebles Inactivos</h1>
 </div>
 
 <div class="col">
@@ -95,10 +95,9 @@
                                 }
                             </td>
                             <td>@($"{inmueble?.Propietarios?.Nombre} {inmueble?.Propietarios?.Apellido}" ?? "")</td>
-                            
                             <td name="Acciones">
                                 <a class="material-symbols-outlined" asp-controller="Inmuebles" asp-action="EditarInmueble"
-                                    asp-route-Id="@inmueble?.Id_inmueble" title="Editar Inmueble" asp-route-viewName="ListadoInmueblesAlquilados">edit_note</a>
+                                    asp-route-Id="@inmueble?.Id_inmueble" title="Editar Inmueble" asp-route-viewName="ListadoInmueblesInactivos">edit_note</a>
                                 <a class="material-symbols-outlined" href="#"
                                     onclick="confirmarEliminacion(@inmueble?.Id_inmueble ?? 0)"
                                     title="Borrar Inmueble">delete</a>
@@ -112,7 +111,7 @@
         </div>
     </div>
 </div>
-
+</div>
 
 
 <!-- jQuery -->

@@ -87,7 +87,7 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
     }
 
     // Método para Listar Inmuebles Activos
-    public IList<Inmuebles> ListarInmueblesActivos()
+    public IList<Inmuebles> ListarInmueblesInactivos()
     {
         var inmuebles = new List<Inmuebles>();
         try
@@ -102,7 +102,7 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
                 inmueble i
                 INNER JOIN tipo_inmueble ti ON i.Id_tipo = ti.Id_tipo
                 INNER JOIN propietario p ON i.Id_propietario = p.Id_propietario
-                WHERE i.activo = 1";
+                WHERE i.activo = 0";
 
                 // Creación del comando SQL
                 using (var command = new MySqlCommand(sql, connection))
@@ -179,7 +179,7 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
                 inmueble i
                 INNER JOIN tipo_inmueble ti ON i.Id_tipo = ti.Id_tipo
                 INNER JOIN propietario p ON i.Id_propietario = p.Id_propietario
-                WHERE i.disponible = 1 AND i.disponible = 1";
+                 WHERE i.disponible = 1 AND i.activo = 1";
 
                 // Creación del comando SQL
                 using (var command = new MySqlCommand(sql, connection))
@@ -256,7 +256,7 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
                 inmueble i
                 INNER JOIN tipo_inmueble ti ON i.Id_tipo = ti.Id_tipo
                 INNER JOIN propietario p ON i.Id_propietario = p.Id_propietario
-                WHERE i.disponible = 0";
+                WHERE i.disponible = 0 AND i.activo = 1";
 
                 // Creación del comando SQL
                 using (var command = new MySqlCommand(sql, connection))

@@ -22,6 +22,7 @@ public class InmueblesController : Controller
     }
 
     // Método para obtener la lista de propietarios
+    [HttpGet]
     public IActionResult ListadoTodosInmuebles()
     {
         // Obtener la lista de propietarios desde el repositorio
@@ -30,27 +31,48 @@ public class InmueblesController : Controller
     }
 
     // Metodo para listar todos los Inmuebles alquilados
-    /*public IActionResult ListadoInmueblesAlquilados()
+    [HttpGet]
+    public IActionResult ListadoInmueblesAlquilados()
     {
         // Enviar la lista de Inmuebles Alquilados
         var lista = repositorio.ListarInmueblesAlquilados();
 
         // Enviar la lista de los Contratos
-        RepositorioContrato repoContrato = new RepositorioContrato();
+        RepositorioContratos repoContrato = new RepositorioContratos();
         var contratos = repoContrato.ListarContratos();
         ViewBag.contratos = contratos;
 
         // Enviar la lista de Inquilinos
-        RepositorioInquilino repoInquilino = new RepositorioInquilino();
+        RepositorioInquilinos repoInquilino = new RepositorioInquilinos();
         var inquilinos = repoInquilino.ListarInquilinos();
         ViewBag.inquilinos = inquilinos;
 
         return View(lista);
-    }*/
+    }
+
+    // Metodo para listar todos los Inmuebles Disponibles
+    [HttpGet]
+    public IActionResult ListadoInmueblesDisponibles()
+    {
+        var lista = repositorio.ListarInmueblesDisponibles();
+        return View(lista);
+    }
+
+    // Metodo para listar todos los Inmuebles Disponibles
+    [HttpGet]
+    public IActionResult ListadoInmueblesInactivos()
+    {
+        var lista = repositorio.ListarInmueblesInactivos();
+        return View(lista);
+    }
 
     // Metodo para editar un inmueble
-    public IActionResult EditarInmueble(int id)
+    [HttpGet]
+    public IActionResult EditarInmueble(int id, string viewName)
     {
+        // Guardar el nombre de la vista original en TempData
+        TempData["viewName"] = viewName;
+
         //Enviar la lista de tipos de inmueble
         var listTipos = repositorio.ListarTiposInmueble();
         ViewBag.tipos = listTipos;
@@ -65,7 +87,9 @@ public class InmueblesController : Controller
         return View(inmueble);
     }
 
+
     // Metodo para modificar un inmueble
+    [HttpPost]
     public IActionResult ModificarInmueble(Inmuebles inmueble)
     {
         if (ModelState.IsValid)
@@ -108,20 +132,82 @@ public class InmueblesController : Controller
                 // No hay contratos asociados, permitir la modificación de todos los campos
                 repositorio.ActualizarInmueble(inmueble);
             }
-
+            // Obtener el nombre de la vista original desde TempData
+            string viewName = TempData["viewName"]?.ToString();
+            if (!string.IsNullOrEmpty(viewName))
+            {
+                return RedirectToAction(viewName);
+            }
             return RedirectToAction(nameof(ListadoTodosInmuebles));
         }
 
         return View("EditarInmueble", inmueble);
     }
 
+    //Metodo para crear un inmueble
+    [HttpGet]
+    public IActionResult CrearInmueble()
+    {
+        //Enviar la lista de tipos de inmueble
+        var listTipos = repositorio.ListarTiposInmueble();
+        ViewBag.tipos = listTipos;
 
+        //Enviar la lista de propietarios
+        RepositorioPropietarios repoProp = new RepositorioPropietarios();
+        var listPropietarios = repoProp.ListarPropietarios();
+        ViewBag.propietarios = listPropietarios;
 
+        return View();
+    }
 
+    //Metodo para guardar un inmueble
+    [HttpPost]
+    public IActionResult GuardarInmueble(Inmuebles inmueble)
+    {
+        if (ModelState.IsValid) //Asegurarse q es valido el modelo
+        {
+            repositorio.GuardarNuevo(inmueble);
+            return RedirectToAction(nameof(ListadoTodosInmuebles));
+        }
+        return View();
+    }
 
+    // Metodo para eliminar un inmueble
+    [HttpGet]
+    public IActionResult EliminarInmueble(int id)
+    {
+        repositorio.EliminarInmueble(id);
+        return RedirectToAction(nameof(ListadoTodosInmuebles));
+    }
 
+    // Metodo para mostrar los detalles de un inmueble
+    [HttpGet]
+    public IActionResult DetallesInmueble(int id)
+    {
+        //Buscar el Inmueble
+       
+        var inmueble = repositorio.ObtenerInmueble(id);
 
+        //Enviar el Contratos
+        RepositorioContratos repoContrato = new RepositorioContratos();
+        var contrato = repoContrato.ObtenerContratoInmueble(inmueble.Id_inmueble);
+        ViewBag.contrato = contrato;
 
+        //Enviar el propietarios
+        RepositorioPropietarios repoProp = new RepositorioPropietarios();
+        var propietario = repoProp.ObtenerPropietario(inmueble.Id_propietario);
+        ViewBag.propietario = propietario;
 
+        //Enviar el Inquilino
+        if(contrato != null)
+        {
+        RepositorioInquilinos repoInquil = new RepositorioInquilinos();
+        var inquilino = repoInquil.ObtenerInquilino(contrato.Id_inquilino);
+        ViewBag.inquilino = inquilino;
+        }
+
+        return View(inmueble);
+    }
 
 }
+
