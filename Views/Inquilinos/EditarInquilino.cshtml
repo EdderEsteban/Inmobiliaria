@@ -11,6 +11,7 @@
     <h4>Modificar Inquilino</h4>
     <form method="post" asp-action="ModificarInquilino">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id_inquilino" />
         <div class="row mt-3">
             <div class="form-floating mb-3 col-6">
                 <input type="text" asp-for="Nombre" class="form-control" placeholder="" />

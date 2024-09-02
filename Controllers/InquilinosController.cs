@@ -90,7 +90,6 @@ public class InquilinosController : Controller
         return RedirectToAction(nameof(ListadoInquilinos));
     }
 
-
     // Método para buscar un inquilino
     public IActionResult BuscarInquilinos()
     {

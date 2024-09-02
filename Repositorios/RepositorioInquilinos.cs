@@ -124,49 +124,40 @@ public class RepositorioInquilinos : InmobiliariaBD.RepositorioBD
         return inquilino;
     }
 
-    // [Actualizar Inquilino]
+    // [Actualizar Inquilino] 
     public void ActualizarInquilino(Inquilinos inquilino)
+{
+    using (var connection = GetConnection())
     {
-        using (var connection = GetConnection())
-        {
-            var sql =
-                @$"UPDATE inquilino SET
-                    {nameof(Inquilinos.Nombre)} = @{nameof(Inquilinos.Nombre)},
-                    {nameof(Inquilinos.Apellido)} = @{nameof(Inquilinos.Apellido)},
-                    {nameof(Inquilinos.Dni)} = @{nameof(Inquilinos.Dni)},
-                    {nameof(Inquilinos.Direccion)} = @{nameof(Inquilinos.Direccion)},
-                    {nameof(Inquilinos.Telefono)} = @{nameof(Inquilinos.Telefono)},
-                    {nameof(Inquilinos.Correo)} = @{nameof(Inquilinos.Correo)}
-                WHERE {nameof(Inquilinos.Id_inquilino)} = @{nameof(Inquilinos.Id_inquilino)}";
+        var sql =
+            @$"UPDATE inquilino SET
+                {nameof(Inquilinos.Nombre)} = @{nameof(Inquilinos.Nombre)},
+                {nameof(Inquilinos.Apellido)} = @{nameof(Inquilinos.Apellido)},
+                {nameof(Inquilinos.Dni)} = @{nameof(Inquilinos.Dni)},
+                {nameof(Inquilinos.Direccion)} = @{nameof(Inquilinos.Direccion)},
+                {nameof(Inquilinos.Telefono)} = @{nameof(Inquilinos.Telefono)},
+                {nameof(Inquilinos.Correo)} = @{nameof(Inquilinos.Correo)}
+            WHERE {nameof(Inquilinos.Id_inquilino)} = @{nameof(Inquilinos.Id_inquilino)}";
 
-            using (var command = new MySqlCommand(sql, connection))
-            {
-                command.Parameters.AddWithValue($"@{nameof(Inquilinos.Nombre)}", inquilino.Nombre);
-                command.Parameters.AddWithValue(
-                    $"@{nameof(Inquilinos.Apellido)}",
-                    inquilino.Apellido
-                );
-                command.Parameters.AddWithValue($"@{nameof(Inquilinos.Dni)}", inquilino.Dni);
-                command.Parameters.AddWithValue(
-                    $"@{nameof(Inquilinos.Direccion)}",
-                    inquilino.Direccion
-                );
-                command.Parameters.AddWithValue(
-                    $"@{nameof(Inquilinos.Telefono)}",
-                    inquilino.Telefono
-                );
-                command.Parameters.AddWithValue($"@{nameof(Inquilinos.Correo)}", inquilino.Correo);
-                command.Parameters.AddWithValue(
-                    $"@{nameof(Inquilinos.Id_inquilino)}",
-                    inquilino.Id_inquilino
-                );
+        
+        using (var command = new MySqlCommand(sql, connection))
+                {
+            // Agregar parámetros de forma segura
+            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Nombre)}", inquilino.Nombre);
+            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Apellido)}", inquilino.Apellido);
+            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Dni)}", inquilino.Dni);
+            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Direccion)}", inquilino.Direccion);
+            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Telefono)}", inquilino.Telefono);
+            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Correo)}", inquilino.Correo);
+            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Id_inquilino)}", inquilino.Id_inquilino);
 
-                connection.Open();
-                command.ExecuteNonQuery();
-                connection.Close();
-            }
+            connection.Open();
+            command.ExecuteNonQuery();
+            // La conexión se cerrará automáticamente al salir del 'using'
         }
     }
+}
+
 
     // Método para eliminar un inquilino por su ID
     // [Eliminar Inquilino]
