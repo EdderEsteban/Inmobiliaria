@@ -30,6 +30,7 @@
             <table id="tblInmuebles" class="table table-sm table-hover table-light text-center">
                 <thead class="table-dark">
                     <tr>
+                        <th>Id</th>
                         <th>Direccion</th>
                         <th>Uso</th>
                         <th>Tipo</th>
@@ -44,6 +45,7 @@
                     @foreach (var inmueble in Model)
                     {
                         <tr>
+                            <td>@(inmueble.Id_inmueble)</td>
                             <td>@(inmueble.Direccion)</td>
                             <td>@(inmueble.Uso)</td>
                             <td>@(inmueble?.Tipo?.Tipo)</td>
@@ -63,7 +65,7 @@
                                     asp-route-Id="@inmueble?.Id_inmueble" title="Editar Inmueble"
                                     asp-route-viewName="ListadoTodosInmuebles">edit_note</a>
                                 <a class="material-symbols-outlined btnBorrar" title="Borrar Inmueble"
-                                    data-id="@inmueble.Id_inmueble">delete</a>
+                                    data-id="@inmueble.Id_inmueble" style="cursor: pointer;">delete</a>
                                 <a class="material-symbols-outlined" asp-controller="Inmuebles"
                                     asp-action="DetallesInmueble" asp-route-Id="@inmueble?.Id_inmueble"
                                     title="Detalles Inmueble">visibility</a>

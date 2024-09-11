@@ -58,3 +58,41 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Escuchar el botón buscar
+    const btnBuscar = document.getElementById("btnBuscar");
+
+    btnBuscar.addEventListener("click", function () {
+        // Obtener el valor del input de búsqueda
+        const idInmueble = document.getElementById("Id").value;
+
+        // Validar si hay algún valor en el campo
+        if (!idInmueble) {
+            Swal.fire({
+                title: "Sin datos",
+                text: "Debe completar el campo Id",
+                icon: "question",
+              });
+              return;
+        }
+
+        // Realizar la solicitud fetch
+        fetch(`/Inmuebles/BuscarInmueblePorId?id=${idInmueble}`, {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(idInmueble),
+          })
+        })
+        .then((response) => response.json())
+    .then((data) => {
+        // Mostrar los datos del inmueble
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      Swal.fire("Ocurrio un error al buscar el inmueble");
+    });
+})

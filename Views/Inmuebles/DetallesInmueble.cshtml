@@ -11,6 +11,7 @@
     <h1 class="display-4">Detalle del Inmueble</h1>
     <table class="table table-sm table-striped table-hover">
     <tr>
+        <th>Id</th>
         <th>Direccion</th>
         <th>Tipo</th>
         <th>Ambientes</th>
@@ -22,8 +23,10 @@
         <th>Inquilino</th>
         <th>Activo</th>
         <th>Disponible</th>
+        <th>Acciones</th>
     </tr>
     <tr>
+        <td>@(Model.Id_inmueble)</td>
         <td>@(Model.Direccion)</td>
         <td>@(Model?.Tipo?.Tipo)</td>
         <td>@(Model?.Cantidad_Ambientes)</td>
@@ -72,6 +75,12 @@
                     </div>
                 }
             </td>
+
+        <td>
+            <a class="material-symbols-outlined" asp-controller="Inmuebles" asp-action="EditarInmueble"
+                                    asp-route-Id="@Model.Id_inmueble" title="Editar Inmueble"
+                                    asp-route-viewName="ListadoTodosInmuebles">edit_note</a>
+        </td>
     </tr>
 
 </table>

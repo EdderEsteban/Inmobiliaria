@@ -1,11 +1,22 @@
 console.log('Ingreso a Select.js');
 
-// Select2
-
-    $(document).ready(function () {
-        $('#listPropietario').select2();
-  
-        $('#listTipo').select2();
+// Tom Select
+document.addEventListener("DOMContentLoaded", function() {
+    new TomSelect("#listPropietario", {
+        create: false,
+        sortField: {
+            field: "text",
+            direction: "asc"
+        }
     });
+
+    new TomSelect("#listTipo", {
+        create: false,
+        sortField: {
+            field: "text",
+            direction: "asc"
+        }
+    });
+});
 
 

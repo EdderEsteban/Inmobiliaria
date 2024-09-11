@@ -32,17 +32,16 @@
         </div>
         <div class="row">
             <div class="form-floating mb-3 col-6">
-                <select name="Id_tipo" class="form-control" id="listTipo">
+                <select asp-for="Id_tipo" class="form-control" id="listTipo">
                     <option value="">Seleccionar Tipo</option>
                     @foreach (var tipo in listaTipos)
                     {
-                        @:<option value="@tipo.Id_tipo">@tipo.Tipo</option>
+                        <option value="@tipo.Id_tipo">@tipo.Tipo</option>
                     }
                 </select>
                 <label asp-for="Id_tipo" class="control-label">Tipo</label>
                 <span asp-validation-for="Id_tipo" class="text-danger"></span>
             </div>
-
             <div class="form-floating mb-3 col-6">
                 <input asp-for="Cantidad_Ambientes" class="form-control" type="number" placeholder="" />
                 <label asp-for="Cantidad_Ambientes" class="control-label">Cantidad de Ambientes</label>
@@ -91,7 +90,7 @@
         <div class="row">
             <div class="form-floating mb-3 col-6">
 
-                <select name="Id_propietario" class="form-control" id="listPropietario">
+                <select asp-for="Id_propietario" class="form-control" id="listPropietario">
                     <option value="">Seleccionar Propietario</option>
                     @foreach (var propietario in listaPropietarios)
                     {
@@ -109,7 +108,6 @@
     </form>
 </div>
 
-<!-- Scripts de Select2 -->
-    <script src="/js/select2.min.js" asp-append-version="true"></script>
+
     <script src="/js/Select.js" asp-append-version="true"></script>
     

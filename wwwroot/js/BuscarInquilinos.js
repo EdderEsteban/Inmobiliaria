@@ -72,5 +72,6 @@ function buscarInquilinos() {
     })
     .catch((error) => {
       console.error("Error:", error);
+      Swal.fire("Ocurrio un error al buscar el inquilino");
     });
 }

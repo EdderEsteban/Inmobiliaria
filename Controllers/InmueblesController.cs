@@ -209,5 +209,10 @@ public class InmueblesController : Controller
         return View(inmueble);
     }
 
+    [HttpGet]
+    public IActionResult BuscarInmuebles()
+    {
+        return View();
+    }
 }
 

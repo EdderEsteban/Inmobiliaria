@@ -119,6 +119,7 @@ function mostrarInmuebles(inmuebles) {
     <table class="table">
         <thead>
             <tr>
+                <th>Id</th>
                 <th>Dirección</th>
                 <th>Uso</th>
                 <th>Tipo</th>
@@ -136,6 +137,7 @@ function mostrarInmuebles(inmuebles) {
   inmuebles.forEach((inmueble) => {
     contenido += `
         <tr>
+            <td>${inmueble.id_inmueble}</td>
             <td>${inmueble.direccion}</td>
             <td>${inmueble.uso === 1 ? 'Comercial' : 'Residencial'}</td>
             <td>${inmueble.tipo.tipo}</td>
