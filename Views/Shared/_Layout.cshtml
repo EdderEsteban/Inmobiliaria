@@ -95,6 +95,25 @@
                                         asp-action="BuscarInmuebles">Buscar Inmuebles</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="material-symbols-outlined">fact_check</i>Contratos</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item text-black" asp-area="" asp-controller="Inmuebles"
+                                        asp-action="ListadoTodosInmuebles">Listado de Contratos</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item text-black" asp-area="" asp-controller="Inmuebles"
+                                        asp-action="CrearInmueble">Nuevo Contrato</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item text-black" asp-area="" asp-controller="Inmuebles"
+                                        asp-action="BuscarInmuebles">Buscar Contratos</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>

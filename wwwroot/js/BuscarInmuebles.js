@@ -84,11 +84,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!response.ok) {
           throw new Error("Error en la respuesta del servidor");
         }
-        return response.json();
+        return response.json(); 
       })
       .then((result) => {
         if (result.success) {
-          console.log(result.data);
+          
           const inmueble = result.data;
           // Actualizar el contenido de la tabla con los datos recibidos
           const tableBody = document.querySelector("#tbodyInmuebles");

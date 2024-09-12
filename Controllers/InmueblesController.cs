@@ -54,7 +54,6 @@ public IActionResult ListadoInmueblesInactivos()
     return Json(new { success = true, data = lista });
 }
 
-
     // Metodo para editar un inmueble
     [HttpGet]
     public IActionResult EditarInmueble(int id, string viewName)
@@ -211,7 +210,7 @@ public IActionResult ListadoInmueblesInactivos()
         var inmueble = repositorio.ObtenerInmueble(id);
         if (inmueble == null)
         {
-            return Json(new { success = false, message = "Inmueble no encontrado" });
+            return Json(new { success = false, message = "Inmueble no encontrado" }); 
         }
         // Enviar la lista de los Contratos
         RepositorioContratos repoContrato = new RepositorioContratos();
@@ -225,4 +224,5 @@ public IActionResult ListadoInmueblesInactivos()
         
         return Json(new { success = true, data = inmueble });
     }
+
 }
