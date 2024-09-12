@@ -31,40 +31,29 @@ public class InmueblesController : Controller
     }
 
     // Metodo para listar todos los Inmuebles alquilados
-    [HttpGet]
-    public IActionResult ListadoInmueblesAlquilados()
-    {
-        // Enviar la lista de Inmuebles Alquilados
-        var lista = repositorio.ListarInmueblesAlquilados();
+[HttpGet]
+public IActionResult ListadoInmueblesAlquilados()
+{
+    var lista = repositorio.ListarInmueblesAlquilados();
+    return Json(new { success = true, data = lista });
+}
 
-        // Enviar la lista de los Contratos
-        RepositorioContratos repoContrato = new RepositorioContratos();
-        var contratos = repoContrato.ListarContratos();
-        ViewBag.contratos = contratos;
+// Metodo para listar todos los Inmuebles Disponibles
+[HttpGet]
+public IActionResult ListadoInmueblesDisponibles()
+{
+    var lista = repositorio.ListarInmueblesDisponibles();
+    return Json(new { success = true, data = lista });
+}
 
-        // Enviar la lista de Inquilinos
-        RepositorioInquilinos repoInquilino = new RepositorioInquilinos();
-        var inquilinos = repoInquilino.ListarInquilinos();
-        ViewBag.inquilinos = inquilinos;
+// Metodo para listar todos los Inmuebles Inactivos
+[HttpGet]
+public IActionResult ListadoInmueblesInactivos()
+{
+    var lista = repositorio.ListarInmueblesInactivos();
+    return Json(new { success = true, data = lista });
+}
 
-        return View(lista);
-    }
-
-    // Metodo para listar todos los Inmuebles Disponibles
-    [HttpGet]
-    public IActionResult ListadoInmueblesDisponibles()
-    {
-        var lista = repositorio.ListarInmueblesDisponibles();
-        return View(lista);
-    }
-
-    // Metodo para listar todos los Inmuebles Disponibles
-    [HttpGet]
-    public IActionResult ListadoInmueblesInactivos()
-    {
-        var lista = repositorio.ListarInmueblesInactivos();
-        return View(lista);
-    }
 
     // Metodo para editar un inmueble
     [HttpGet]
@@ -87,7 +76,6 @@ public class InmueblesController : Controller
         return View(inmueble);
     }
 
-
     // Metodo para modificar un inmueble
     [HttpPost]
     public IActionResult ModificarInmueble(Inmuebles inmueble)
@@ -98,7 +86,9 @@ public class InmueblesController : Controller
             RepositorioContratos repoContrato = new RepositorioContratos();
 
             // Obtener todos los contratos asociados al inmueble
-            var contratosDelInmueble = repoContrato.ListarContratosPorInmueble(inmueble.Id_inmueble);
+            var contratosDelInmueble = repoContrato.ListarContratosPorInmueble(
+                inmueble.Id_inmueble
+            );
 
             // Verificar si existen contratos asociados al inmueble
             if (contratosDelInmueble.Count > 0)
@@ -185,7 +175,7 @@ public class InmueblesController : Controller
     public IActionResult DetallesInmueble(int id)
     {
         //Buscar el Inmueble
-       
+
         var inmueble = repositorio.ObtenerInmueble(id);
 
         //Enviar el Contratos
@@ -199,11 +189,11 @@ public class InmueblesController : Controller
         ViewBag.propietario = propietario;
 
         //Enviar el Inquilino
-        if(contrato != null)
+        if (contrato != null)
         {
-        RepositorioInquilinos repoInquil = new RepositorioInquilinos();
-        var inquilino = repoInquil.ObtenerInquilino(contrato.Id_inquilino);
-        ViewBag.inquilino = inquilino;
+            RepositorioInquilinos repoInquil = new RepositorioInquilinos();
+            var inquilino = repoInquil.ObtenerInquilino(contrato.Id_inquilino);
+            ViewBag.inquilino = inquilino;
         }
 
         return View(inmueble);
@@ -214,5 +204,25 @@ public class InmueblesController : Controller
     {
         return View();
     }
-}
 
+    [HttpPost]
+    public IActionResult BuscarInmueblexId(int id)
+    {
+        var inmueble = repositorio.ObtenerInmueble(id);
+        if (inmueble == null)
+        {
+            return Json(new { success = false, message = "Inmueble no encontrado" });
+        }
+        // Enviar la lista de los Contratos
+        RepositorioContratos repoContrato = new RepositorioContratos();
+        var contratos = repoContrato.ListarContratos();
+        ViewBag.contratos = contratos;
+
+        // Enviar la lista de Inquilinos
+        RepositorioInquilinos repoInquilino = new RepositorioInquilinos();
+        var inquilinos = repoInquilino.ListarInquilinos();
+        ViewBag.inquilinos = inquilinos;
+        
+        return Json(new { success = true, data = inmueble });
+    }
+}
