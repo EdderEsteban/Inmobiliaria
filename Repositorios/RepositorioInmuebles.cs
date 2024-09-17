@@ -578,6 +578,88 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
         return inmueble;
     }
 
+    // Método para obtener la lista de inmuebles por su dirección
+    public List<Inmuebles> ObtenerInmueblesPorDireccion(string direccion)
+{
+    Console.WriteLine($"Esta es la DIreccion en Repositorio {direccion}");
+
+    if (string.IsNullOrEmpty(direccion))
+    {
+        // Retornar una lista vacía si no se proporciona una dirección válida
+        return new List<Inmuebles>(); 
+    }
+    var inmuebles = new List<Inmuebles>();
+    try
+    {
+        using (var connection = GetConnection())
+        {
+            var sql = @"
+                SELECT 
+                    i.Id_inmueble, i.Direccion, i.Uso, i.Id_tipo, ti.Tipo AS TipoInmueble, 
+                    i.Cantidad_Ambientes, i.Precio_Alquiler, i.Latitud, i.Longitud, 
+                    i.activo, i.disponible, i.Id_propietario, 
+                    p.Nombre AS NombrePropietario, p.Apellido AS ApellidoPropietario
+                FROM 
+                    inmueble i
+                INNER JOIN tipo_inmueble ti ON i.Id_tipo = ti.Id_tipo
+                INNER JOIN propietario p ON i.Id_propietario = p.Id_propietario
+                WHERE i.Direccion LIKE @direccion;"; // Búsqueda por dirección
+
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                // Parámetro de búsqueda con comodín para direcciones que contienen el texto ingresado
+                command.Parameters.AddWithValue("@direccion", direccion + "%");
+                connection.Open();
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read()) // Iterar sobre los resultados
+                    {
+                        string uso = reader.GetString(nameof(Inmuebles.Uso));
+                        UsoInmueble usoEnum;
+                        Enum.TryParse(uso, out usoEnum); // Manejo de enums
+
+                        var inmueble = new Inmuebles
+                        {
+                            Id_inmueble = reader.GetInt32(nameof(Inmuebles.Id_inmueble)),
+                            Direccion = reader.GetString(nameof(Inmuebles.Direccion)),
+                            Uso = usoEnum,
+                            Tipo = new InmuebleTipo
+                            {
+                                Tipo = reader.GetString("TipoInmueble"),
+                            },
+                            Cantidad_Ambientes = reader.GetInt32(nameof(Inmuebles.Cantidad_Ambientes)),
+                            Precio_Alquiler = reader.GetDecimal(nameof(Inmuebles.Precio_Alquiler)),
+                            Latitud = reader.GetString(nameof(Inmuebles.Latitud)),
+                            Longitud = reader.GetString(nameof(Inmuebles.Longitud)),
+                            Id_propietario = reader.GetInt32(nameof(Inmuebles.Id_propietario)),
+                            Propietarios = new Propietarios
+                            {
+                                Nombre = reader.GetString("NombrePropietario"),
+                                Apellido = reader.GetString("ApellidoPropietario"),
+                            },
+                            Activo = reader.GetBoolean(nameof(Inmuebles.Activo)),
+                            Disponible = reader.GetBoolean(nameof(Inmuebles.Disponible)),
+                        };
+
+                        // Agregar el inmueble a la lista
+                        inmuebles.Add(inmueble);
+                    }
+                }
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        // Manejar cualquier excepción
+        throw new Exception("Error al obtener los inmuebles por dirección", ex);
+    }
+
+    // Retornar la lista de inmuebles encontrados
+    return inmuebles;
+}
+
+    
     // Método para actualizar los datos de un inmueble
     public void ActualizarInmueble(Inmuebles inmueble)
     {

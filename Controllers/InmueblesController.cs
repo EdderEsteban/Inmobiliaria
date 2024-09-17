@@ -31,28 +31,28 @@ public class InmueblesController : Controller
     }
 
     // Metodo para listar todos los Inmuebles alquilados
-[HttpGet]
-public IActionResult ListadoInmueblesAlquilados()
-{
-    var lista = repositorio.ListarInmueblesAlquilados();
-    return Json(new { success = true, data = lista });
-}
+    [HttpGet]
+    public IActionResult ListadoInmueblesAlquilados()
+    {
+        var lista = repositorio.ListarInmueblesAlquilados();
+        return Json(new { success = true, data = lista });
+    }
 
-// Metodo para listar todos los Inmuebles Disponibles
-[HttpGet]
-public IActionResult ListadoInmueblesDisponibles()
-{
-    var lista = repositorio.ListarInmueblesDisponibles();
-    return Json(new { success = true, data = lista });
-}
+    // Metodo para listar todos los Inmuebles Disponibles
+    [HttpGet]
+    public IActionResult ListadoInmueblesDisponibles()
+    {
+        var lista = repositorio.ListarInmueblesDisponibles();
+        return Json(new { success = true, data = lista });
+    }
 
-// Metodo para listar todos los Inmuebles Inactivos
-[HttpGet]
-public IActionResult ListadoInmueblesInactivos()
-{
-    var lista = repositorio.ListarInmueblesInactivos();
-    return Json(new { success = true, data = lista });
-}
+    // Metodo para listar todos los Inmuebles Inactivos
+    [HttpGet]
+    public IActionResult ListadoInmueblesInactivos()
+    {
+        var lista = repositorio.ListarInmueblesInactivos();
+        return Json(new { success = true, data = lista });
+    }
 
     // Metodo para editar un inmueble
     [HttpGet]
@@ -198,19 +198,21 @@ public IActionResult ListadoInmueblesInactivos()
         return View(inmueble);
     }
 
+    // Metodo para buscar inmuebles
     [HttpGet]
     public IActionResult BuscarInmuebles()
     {
         return View();
     }
 
+    // Metodo para buscar inmuebles por id
     [HttpPost]
     public IActionResult BuscarInmueblexId(int id)
     {
         var inmueble = repositorio.ObtenerInmueble(id);
         if (inmueble == null)
         {
-            return Json(new { success = false, message = "Inmueble no encontrado" }); 
+            return Json(new { success = false, message = "Inmueble no encontrado" });
         }
         // Enviar la lista de los Contratos
         RepositorioContratos repoContrato = new RepositorioContratos();
@@ -221,8 +223,22 @@ public IActionResult ListadoInmueblesInactivos()
         RepositorioInquilinos repoInquilino = new RepositorioInquilinos();
         var inquilinos = repoInquilino.ListarInquilinos();
         ViewBag.inquilinos = inquilinos;
-        
+
         return Json(new { success = true, data = inmueble });
     }
 
+    // Método para buscar inmuebles por dirección
+    [HttpPost]
+    public IActionResult BuscarInmueblexDir([FromBody] BusquedaInmuebles busqueda)
+    {
+        Console.WriteLine(busqueda.Direccion);
+        if (busqueda == null || string.IsNullOrEmpty(busqueda.Direccion))
+        {
+            return Json(new { success = false, message = "Dirección no proporcionada" });
+        }
+
+        var inmuebles = repositorio.ObtenerInmueblesPorDireccion(busqueda.Direccion);
+
+        return Json(new { success = true, data = inmuebles });
+    }
 }

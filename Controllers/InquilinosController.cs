@@ -98,7 +98,7 @@ public class InquilinosController : Controller
 
     // Método para recibir el formulario Search
     [HttpPost]
-    public IActionResult BuscarInq([FromBody] BusquedaInquilinos busqueda)
+    public IActionResult BuscarInq([FromBody] BusquedaInquilinos busqueda) 
     {
         var resultados = repositorio.BuscarInquilinos(busqueda);
 

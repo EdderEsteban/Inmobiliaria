@@ -24,21 +24,37 @@
                         </button>
                     </div>
                 </div>
-                <div class="text center">
-                    <div class="form-floating mb-3">
-                        <Button type="button" id="btnAlquilados" class="btn btn-success w-75"
-                            name="btnAlquilados">Alquilados</Button>
+            </form>
+            <form method="post" id="formSearchDir">
+                <div class="row mb-3 mt-2">
+                    <div class="col-8">
+                        <div class="form-floating">
+                            <input name="Direccion" id="Direccion" class="form-control" placeholder="" />
+                            <label for="Direccion" class="control-label">Direccion</label>
+                        </div>
                     </div>
-                    <div class="form-floating mb-3">
-                        <Button type="button" id="btnDisponibles" class="btn btn-success w-75"
-                            name="btnAlquilados">Disponibles</Button>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <Button type="button" id="btnInactivos" class="btn btn-success w-75"
-                            name="btnAlquilados">Inactivos</Button>
+                    <div class="col-2 d-flex align-items-center">
+                        <button type="button" id="btnBuscarDir" class="btn btn-success" name="btnBuscarDir">
+                            <i class="material-symbols-outlined">search</i>
+                        </button>
                     </div>
                 </div>
             </form>
+
+            <div class="text center">
+                <div class="form-floating mb-3">
+                    <Button type="button" id="btnAlquilados" class="btn btn-success w-75"
+                        name="btnAlquilados">Alquilados</Button>
+                </div>
+                <div class="form-floating mb-3">
+                    <Button type="button" id="btnDisponibles" class="btn btn-success w-75"
+                        name="btnAlquilados">Disponibles</Button>
+                </div>
+                <div class="form-floating mb-3">
+                    <Button type="button" id="btnInactivos" class="btn btn-success w-75"
+                        name="btnAlquilados">Inactivos</Button>
+                </div>
+            </div>
         </div>
     </div>
 
