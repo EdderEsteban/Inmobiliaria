@@ -8,6 +8,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Función para hacer la solicitud y actualizar la tabla
   function cargarContratos(url) {
+    // Destruir la instancia anterior de DataTable si existe
+    if ($.fn.DataTable.isDataTable("#tblContratos")) {
+      $('#tblContratos').DataTable().clear().destroy();
+    }
+
+    // Llamar al servidor para obtener los datos
     fetch(url, {
       method: "GET",
       headers: {
@@ -28,18 +34,18 @@ document.addEventListener("DOMContentLoaded", function () {
           const inmuebles = result.inmuebles;
           const tableBody = document.querySelector("#tblBodyContratos");
           tableBody.innerHTML = ""; // Limpiar el contenido actual
-          console.log(contratos);
-          console.log("aca Inmuebles", inmuebles);
+
+          // Actualizar el contenido de la tabla con los datos recibidos
           contratos.forEach((contrato) => {
             const inquilino = inquilinos.find(i => i.id_inquilino === contrato.id_inquilino);
             const inmueble = inmuebles.find(i => i.id_inmueble === contrato.id_inmueble);
-  
-            const nombreInquilino = inquilino? `${inquilino.nombre} ${inquilino.apellido}`: "Inquilino no disponible";
-  
-            const direccionInmueble = inmueble? inmueble.direccion: "Dirección no disponible";
-  
-            const precioInmueble = inmueble? inmueble.precio_Alquiler: "Precio no disponible";
-  
+
+            const nombreInquilino = inquilino ? `${inquilino.nombre} ${inquilino.apellido}` : "Inquilino no disponible";
+
+            const direccionInmueble = inmueble ? inmueble.direccion : "Dirección no disponible";
+
+            const precioInmueble = inmueble ? inmueble.precio_Alquiler : "Precio no disponible";
+
             const row = document.createElement("tr");
             row.innerHTML = `
               <td>${contrato.id_contrato}</td>
@@ -57,6 +63,13 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
             tableBody.appendChild(row);
           });
+          // Inicializar DataTable después de cargar los datos
+          $('#tblContratos').DataTable({
+            destroy: true, // Destruir la instancia anterior de DataTable si existe
+            language: {
+              url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json" // Cambiar idioma a español
+            }
+          });
         } else {
           Swal.fire({
             title: "Lo siento",
@@ -70,7 +83,6 @@ document.addEventListener("DOMContentLoaded", function () {
         Swal.fire("Ocurrió un error al cargar los contratos");
       });
   }
-  
 
   // Listeners para los botones
   btnVigentes.addEventListener("click", function () {
