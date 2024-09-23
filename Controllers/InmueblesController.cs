@@ -231,7 +231,6 @@ public class InmueblesController : Controller
     [HttpPost]
     public IActionResult BuscarInmueblexDir([FromBody] BusquedaInmuebles busqueda)
     {
-        Console.WriteLine(busqueda.Direccion);
         if (busqueda == null || string.IsNullOrEmpty(busqueda.Direccion))
         {
             return Json(new { success = false, message = "Dirección no proporcionada" });

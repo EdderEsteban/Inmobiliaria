@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Inmobiliaria.Controllers;
 
-public class PagoController : Controller
+public class PagoController : Controller 
 {
     private readonly ILogger<PagoController> _logger;
 

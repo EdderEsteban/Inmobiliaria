@@ -581,8 +581,6 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
     // Método para obtener la lista de inmuebles por su dirección
     public List<Inmuebles> ObtenerInmueblesPorDireccion(string direccion)
 {
-    Console.WriteLine($"Esta es la DIreccion en Repositorio {direccion}");
-
     if (string.IsNullOrEmpty(direccion))
     {
         // Retornar una lista vacía si no se proporciona una dirección válida

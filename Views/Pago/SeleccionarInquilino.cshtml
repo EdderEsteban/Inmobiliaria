@@ -1,0 +1,36 @@
+@model Pago
+
+@{
+    ViewData["Title"] = "Seleccionar Inquilino";
+   
+    var listaInquilinos = ViewBag.inquilinos as List<Inquilinos>;
+    
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 card">
+            <h2>Crear Pago</h2>
+            <form method="get" asp-action="SeleccionarInmueble">
+                <div class="form-group mb-3">
+                    <label asp-for="Inquilino" class="control-label">Inquilino</label>
+                    <select asp-for="Id_Inquilino" class="form-control" id="listInquilino">
+                        <option default>Seleccione Inquilino</option>
+                        @foreach (var inquilino in listaInquilinos)
+                        {
+                            <option value="@inquilino.Id_inquilino">@inquilino.Nombre @inquilino.Apellido @inquilino.Dni
+                            </option>
+                        }
+                    </select>
+                    <span asp-validation-for="Inquilino" class="text-danger"></span>
+                </div>
+                <div name="Acciones" class="form-group mb-3">
+                    <a asp-action="SeleccionarInmueble" class="btn btn-primary">Siguiente</a>
+                    <a asp-action="ListadoContratos" class="btn btn-primary">Volver</a>
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

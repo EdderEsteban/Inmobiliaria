@@ -8,11 +8,11 @@
 }
 
 <div class="text-center mb-4">
-    <h2 class="display-4">Crear Inquilino</h2>
+    <h2 class="display-4">Crear Inmueble</h2>
 </div>
 
 <div class="container col-8">
-    <h4>Nuevo Inquilino</h4>
+    <h4>Nuevo Inmueble</h4>
     <form method="post" asp-action="GuardarInmueble">
         <div class="row">
             <div class="form-floating mb-3 col-6">
@@ -89,8 +89,7 @@
         </div>
         <div class="row">
             <div class="form-floating mb-3 col-6">
-
-                <select asp-for="Id_propietario" class="form-control" id="listPropietario">
+                    <select asp-for="Id_propietario" class="form-control" id="listPropietario">
                     <option value="">Seleccionar Propietario</option>
                     @foreach (var propietario in listaPropietarios)
                     {
@@ -102,7 +101,7 @@
             </div>
             <div class="form-group col-6 text-center mt-3">
                 <input type="submit" value="Guardar" class="btn btn-success w-25 mx-2" />
-                <a asp-action="ListadoInmueblesDisponibles" class="btn btn-primary w-25 mx-2">Volver</a>
+                <a asp-action="ListadoTodosInmuebles" class="btn btn-primary w-25 mx-2">Volver</a>
             </div>
         </div>
     </form>

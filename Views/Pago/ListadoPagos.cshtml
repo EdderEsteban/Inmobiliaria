@@ -1,0 +1,64 @@
+@model IList<Pago>
+@{
+    ViewData["Title"] = "Listado de Pagos";
+    var listaInmuebles = ViewBag.inmuebles as List<Inmuebles>;
+    var listaInquilinos = ViewBag.inquilinos as List<Inquilinos>;
+    var listaContratos = ViewBag.contratos as List<Contrato>;
+}
+
+
+<div class="text-center">
+    <h2 class="display-4">Listado de Pagos</h2>
+    <div class="text-start mb-3">
+        <a class="material-symbols-outlined" asp-controller="Inmueble" asp-action="ListadoInmueblesAlquilados"
+            title="Nuevo Pago">currency_exchange</a>
+        <div class="mb-3">
+            <strong><label for="txtBusqueda" class="form-label">Buscar:</label></strong>
+            <input type="text" id="txtBusqueda" class="form-control-sm" placeholder="Buscar Pago...">
+        </div>
+    </div>
+    <table class="table table-sm table-striped table-hover table-light">
+        <tr>
+            <th>N° de Pago</th>
+            <th>N° de Contrato</th>
+            <th>Inmueble</th>
+            <th>Inquilino</th>
+            <th>Fecha de Pago</th>
+            <th>Monto </th>
+            <th>Acciones</th>
+        </tr>
+        @foreach (var pago in Model)
+        {
+            <tr>
+                <td>@(pago.Id_Pago)</td>
+                <td>@(pago.Id_Contrato)</td>
+                <td>
+                    @{
+                        var contrato = listaContratos.FirstOrDefault(c => c.Id_contrato == pago.Id_Contrato);
+                        var inmueble = listaInmuebles.FirstOrDefault(i => i.Id_inmueble == contrato.Id_inmueble);
+                        if (inmueble != null)
+                        {
+                            @inmueble.Direccion
+                        }
+                    }
+                </td>
+                <td>
+                    @{
+                        var inquilino = listaInquilinos.FirstOrDefault(i => i.Id_inquilino == contrato.Id_inquilino);
+                        if (inquilino != null)
+                        {
+                            @($"{inquilino.Nombre} {@inquilino.Apellido}");
+                        }
+                    }
+                </td>
+                <td>@pago.Fecha_Pago.ToString("dd/MM/yyyy")</td>
+                <td>@(pago.Monto)</td>
+                <td>
+                    <a class="material-symbols-outlined" asp-action="Editar" asp-route-id="@pago.Id_Pago">edit_note</a>
+                    <a class="material-symbols-outlined" asp-action="EliminarPago" asp-route-id="@pago.Id_Pago">delete</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

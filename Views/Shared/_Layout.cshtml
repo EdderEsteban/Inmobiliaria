@@ -38,6 +38,7 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">
                                 <i class="material-symbols-outlined">home</i>Inicio</a>
                         </li>
+                        <!-- Propietarios -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -57,6 +58,7 @@
                                         asp-action="BuscarPropietarios">Buscar Propietario</a></li>
                             </ul>
                         </li>
+                        <!-- Inquilinos -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -76,6 +78,7 @@
                                         asp-action="BuscarInquilinos">Buscar Inquilino</a></li>
                             </ul>
                         </li>
+                        <!-- Inmuebles -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -95,23 +98,44 @@
                                         asp-action="BuscarInmuebles">Buscar Inmuebles</a></li>
                             </ul>
                         </li>
+                        <!-- Contratos -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="material-symbols-outlined">fact_check</i>Contratos</a>
                             <ul class="dropdown-menu">
+                                <li><a class="dropdown-item text-black" asp-area="" asp-controller="Contratos"
+                                        asp-action="ListadoContratos">Listado de Contratos</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item text-black" asp-area="" asp-controller="Contratos"
+                                        asp-action="CrearContrato">Nuevo Contrato</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item text-black" asp-area="" asp-controller="Contratos"
+                                        asp-action="BuscarContratos">Buscar Contratos</a></li>
+                            </ul>
+                        </li>
+                        <!-- Pagos -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="material-symbols-outlined">fact_check</i>Pagos</a>
+                            <ul class="dropdown-menu">
                                 <li><a class="dropdown-item text-black" asp-area="" asp-controller="Inmuebles"
-                                        asp-action="ListadoTodosInmuebles">Listado de Contratos</a></li>
+                                        asp-action="ListadoTodosInmuebles">Listado de Pagos</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li><a class="dropdown-item text-black" asp-area="" asp-controller="Inmuebles"
-                                        asp-action="CrearInmueble">Nuevo Contrato</a></li>
+                                        asp-action="CrearInmueble">Inquilino</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li><a class="dropdown-item text-black" asp-area="" asp-controller="Inmuebles"
-                                        asp-action="BuscarInmuebles">Buscar Contratos</a></li>
+                                        asp-action="BuscarInmuebles">Buscar Inquilino</a></li>
                             </ul>
                         </li>
                     </ul>

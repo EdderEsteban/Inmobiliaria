@@ -70,7 +70,7 @@ public class ContratosController : Controller
         ViewBag.inmueblesDisponibles = listaInmueblesDisponibles;
 
         // Enviar la lista de Inquilinos
-        RepositorioInquilinos repoInquilino = new RepositorioInquilinos();
+        RepositorioInquilinos repoInquilino = new RepositorioInquilinos(); 
         var listaInquilinos = repoInquilino.ListarInquilinos();
         ViewBag.inquilinos = listaInquilinos;
 
@@ -106,7 +106,7 @@ public class ContratosController : Controller
             RepositorioInmuebles repoinmueble = new RepositorioInmuebles();
             repoinmueble.CambiarEstadoInmueble(contrato.Id_inmueble);
 
-            return RedirectToAction("ListadoInmueblesAlquilados", "Inmueble");
+            return RedirectToAction("ListadoContratos", "Contratos");
         }
         return View("CrearContrato", contrato);
     }
@@ -149,7 +149,7 @@ public class ContratosController : Controller
     }
 
     // Metodo para modificar un contrato
-    [HttpPut]
+    [HttpPost]
     public IActionResult ModificarContrato(Contrato contrato)
     {
         if (ModelState.IsValid)
@@ -162,11 +162,24 @@ public class ContratosController : Controller
     }
 
     // Metodo para eliminar un contrato
-    [HttpDelete]
     public IActionResult EliminarContrato(int id)
     {
         repositorio.EliminarContrato(id);
         return RedirectToAction(nameof(ListadoContratos));
     }
+
+    // Metodo para buscar un contrato
+    public IActionResult BuscarContratos()
+    {
+        return View();  
+    }
+
+    // Metodo para mostrar Contratos Vigentes
+    public IActionResult ContratosVigentes()
+    {
+        var lista = repositorio.ListarContratosVigentes();
+        return Json(new { success = true, data = lista }); 
+    }
+
 } 
 

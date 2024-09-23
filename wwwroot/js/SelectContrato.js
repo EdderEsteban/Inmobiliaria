@@ -1,8 +1,8 @@
-console.log('Ingreso a Select.js');
+console.log("Ingreso a SelectContrato.js");
 
 // Tom Select
 document.addEventListener("DOMContentLoaded", function() {
-    new TomSelect("#listPropietario", {
+    new TomSelect("#listInquilino", {
         create: false,
         sortField: {
             field: "text",
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    new TomSelect("#listTipo", {
+    new TomSelect("#listInmueble", {
         create: false,
         sortField: {
             field: "text",
@@ -18,7 +18,4 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    
 });
-
-

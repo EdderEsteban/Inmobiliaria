@@ -54,6 +54,51 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
         return contratos;
     }
 
+    // Listar Contratos Vigentes
+    public IList<Contrato> ListarContratosVigentes()
+    {
+        var contratos = new List<Contrato>();
+        using (var connection = new MySqlConnection(ConnectionString))
+        {
+            var sql = @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin, vigencia 
+                FROM contrato
+                WHERE vigencia = 1";
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var contrato = new Contrato
+                        {
+                            Id_contrato = reader.GetInt32("id_contrato"),
+                            Id_inquilino = reader.GetInt32("id_inquilino"),
+                            Id_inmueble = reader.GetInt32("id_inmueble"),
+                            Monto = reader.GetInt32("monto"),
+                            Fecha_inicio = reader.GetDateTime("fecha_inicio"),
+                            Fecha_fin = reader.GetDateTime("fecha_fin"),
+                            Vigencia = reader.GetBoolean("vigencia")
+                        };
+
+                        if (contrato.Fecha_fin < DateTime.Now)
+                        {
+                            contrato.Vigencia = false;
+                            ActualizarContrato(contrato);
+                        }
+                        else
+                        {
+                            contrato.Vigencia = true;
+                            ActualizarContrato(contrato);
+                        }
+                        contratos.Add(contrato);
+                    }
+                }
+                connection.Close();
+            }
+        }
+        return contratos;
+    }
 
 
     public int GuardarNuevo(Contrato contrato)
@@ -112,8 +157,6 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
         }
         return contrato;
     }
-
-
 
     public Contrato ObtenerContratoInmueble(int id)
     {
@@ -187,7 +230,6 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
             using (var command = new MySqlCommand(sql, connection))
             {
                 command.Parameters.AddWithValue("@id_contrato", id);
-
                 connection.Open();
                 command.ExecuteNonQuery();
                 connection.Close();
@@ -195,6 +237,7 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
         }
     }
 
+    // Metodo q se usa con InmueblesController para listar los contratos de un inmueble
     public IList<Contrato> ListarContratosPorInmueble(int idInmueble)
     {
         var contratos = new List<Contrato>();
