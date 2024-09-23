@@ -70,7 +70,7 @@ public class ContratosController : Controller
         ViewBag.inmueblesDisponibles = listaInmueblesDisponibles;
 
         // Enviar la lista de Inquilinos
-        RepositorioInquilinos repoInquilino = new RepositorioInquilinos(); 
+        RepositorioInquilinos repoInquilino = new RepositorioInquilinos();
         var listaInquilinos = repoInquilino.ListarInquilinos();
         ViewBag.inquilinos = listaInquilinos;
 
@@ -161,25 +161,87 @@ public class ContratosController : Controller
         return View("EditarContrato", contrato);
     }
 
-    // Metodo para eliminar un contrato
+    // Metodo para eliminar un Contrato
     public IActionResult EliminarContrato(int id)
     {
-        repositorio.EliminarContrato(id);
+        try
+        {
+            repositorio.EliminarContrato(id);
+            // Establecer mensaje de éxito
+            TempData["SuccessMessage"] = "Contrato eliminado exitosamente.";
+            
+        }
+       catch (InvalidOperationException ex)
+        {
+            // Capturar la excepción específica y establecer el mensaje de error
+            TempData["ErrorMessage"] = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            // Capturar cualquier otra excepción y establecer un mensaje de error genérico
+            TempData["ErrorMessage"] = $"Ocurrió un error al eliminar el Contrato. {ex.Message}";
+        }
+
+        // Redirigir a la lista de propietarios
         return RedirectToAction(nameof(ListadoContratos));
+        
     }
+
 
     // Metodo para buscar un contrato
     public IActionResult BuscarContratos()
     {
-        return View();  
+        return View();
     }
 
     // Metodo para mostrar Contratos Vigentes
     public IActionResult ContratosVigentes()
     {
-        var lista = repositorio.ListarContratosVigentes();
-        return Json(new { success = true, data = lista }); 
+        // Enviar la lista de Contratos Vigentes
+        var listaContratos = repositorio.ListarContratosVigentes();
+
+        // Enviar la lista de Inmuebles Disponibles
+        RepositorioInmuebles repoInmueble = new RepositorioInmuebles();
+        var listaInmueblesDisponibles = repoInmueble.ListarTodosInmuebles();
+
+        // Enviar la lista de Inquilinos
+        RepositorioInquilinos repoInquilino = new RepositorioInquilinos();
+        var listaInquilinos = repoInquilino.ListarInquilinos();
+
+        // Enviar todo en un solo objeto JSON
+        return Json(new
+        {
+            success = true,
+            contratos = listaContratos,
+            inmuebles = listaInmueblesDisponibles,
+            inquilinos = listaInquilinos
+        });
     }
 
-} 
+    // Metodo para mostrar Contratos Terminados
+    public IActionResult ContratosTerminados()
+    {
+        // Enviar la lista de Contratos Terminados
+        var listaContratos = repositorio.ListarContratosTerminados();
+
+        // Enviar la lista de Inmuebles Disponibles
+        RepositorioInmuebles repoInmueble = new RepositorioInmuebles();
+        var listaInmueblesDisponibles = repoInmueble.ListarTodosInmuebles();
+
+        // Enviar la lista de Inquilinos
+        RepositorioInquilinos repoInquilino = new RepositorioInquilinos();
+        var listaInquilinos = repoInquilino.ListarInquilinos();
+
+        // Enviar todo en un solo objeto JSON
+        return Json(new
+        {
+            success = true,
+            contratos = listaContratos,
+            inmuebles = listaInmueblesDisponibles,
+            inquilinos = listaInquilinos
+        });
+    }
+
+
+}
 

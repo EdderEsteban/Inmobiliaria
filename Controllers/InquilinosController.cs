@@ -73,7 +73,7 @@ public class InquilinosController : Controller
             // Intentar eliminar el inquilino desde el repositorio
             repositorio.EliminarInquilino(id);
             // Establecer mensaje de éxito
-            TempData["SuccessMessage"] = "Propietario eliminado exitosamente.";
+            TempData["SuccessMessage"] = "Inquilino eliminado exitosamente.";
         }
         catch (InvalidOperationException ex)
         {
@@ -83,7 +83,7 @@ public class InquilinosController : Controller
         catch (Exception ex)
         {
             // Capturar cualquier otra excepción y establecer un mensaje de error genérico
-            TempData["ErrorMessage"] = $"Ocurrió un error al eliminar el propietario. {ex.Message}";
+            TempData["ErrorMessage"] = $"Ocurrió un error al eliminar el Inquilino. {ex.Message}";
         }
 
         // Redirigir a la lista de propietarios

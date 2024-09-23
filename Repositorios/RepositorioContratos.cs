@@ -100,6 +100,52 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
         return contratos;
     }
 
+    // Listar Contratos Terminados
+    public IList<Contrato> ListarContratosTerminados()
+    {
+        var contratos = new List<Contrato>();
+        using (var connection = new MySqlConnection(ConnectionString))
+        {
+            var sql = @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin, vigencia 
+                FROM contrato
+                WHERE vigencia = 0";
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var contrato = new Contrato
+                        {
+                            Id_contrato = reader.GetInt32("id_contrato"),
+                            Id_inquilino = reader.GetInt32("id_inquilino"),
+                            Id_inmueble = reader.GetInt32("id_inmueble"),
+                            Monto = reader.GetInt32("monto"),
+                            Fecha_inicio = reader.GetDateTime("fecha_inicio"),
+                            Fecha_fin = reader.GetDateTime("fecha_fin"),
+                            Vigencia = reader.GetBoolean("vigencia")
+                        };
+
+                        if (contrato.Fecha_fin < DateTime.Now)
+                        {
+                            contrato.Vigencia = false;
+                            ActualizarContrato(contrato);
+                        }
+                        else
+                        {
+                            contrato.Vigencia = true;
+                            ActualizarContrato(contrato);
+                        }
+                        contratos.Add(contrato);
+                    }
+                }
+                connection.Close();
+            }
+        }
+        return contratos;
+    }
+
 
     public int GuardarNuevo(Contrato contrato)
     {

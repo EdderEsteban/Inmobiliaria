@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnTerminados = document.getElementById("btnTerminados");
 
   // Función para hacer la solicitud y actualizar la tabla
-  function cargarInmuebles(url) {
+  function cargarContratos(url) {
     fetch(url, {
       method: "GET",
       headers: {
@@ -23,27 +23,38 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .then((result) => {
         if (result.success) {
-          const contratos = result.data;
+          const contratos = result.contratos;
+          const inquilinos = result.inquilinos;
+          const inmuebles = result.inmuebles;
           const tableBody = document.querySelector("#tblBodyContratos");
           tableBody.innerHTML = ""; // Limpiar el contenido actual
-          // Iterar sobre los contratos recibidos
+          console.log(contratos);
+          console.log("aca Inmuebles", inmuebles);
           contratos.forEach((contrato) => {
+            const inquilino = inquilinos.find(i => i.id_inquilino === contrato.id_inquilino);
+            const inmueble = inmuebles.find(i => i.id_inmueble === contrato.id_inmueble);
+  
+            const nombreInquilino = inquilino? `${inquilino.nombre} ${inquilino.apellido}`: "Inquilino no disponible";
+  
+            const direccionInmueble = inmueble? inmueble.direccion: "Dirección no disponible";
+  
+            const precioInmueble = inmueble? inmueble.precio_Alquiler: "Precio no disponible";
+  
             const row = document.createElement("tr");
             row.innerHTML = `
-            <td>${contrato.Id_contrato}</td>
-              <td>${contrato.Inquilino.Nombre} ${contrato.Inquilino.Apellido}</td>
-              <td>${contrato.Inmueble.Direccion}</td>
-              <td>${new Date(contrato.Fecha_inicio).toLocaleDateString("es-ES")}</td>
-              <td>${new Date(contrato.Fecha_fin).toLocaleDateString("es-ES")}</td>
-              <td>${contrato.Inmueble.Precio}</td>
-              <td>${contrato.Monto}</td>
-              <td>${contrato.Vigencia ? 'Vigente' : 'No Vigente'}</td>
-            <td>
-                    <a href="/Inmuebles/EditarInmueble/${inmueble.id_inmueble}" class="material-symbols-outlined" title="Editar Inmueble">edit_note</a>
-                    <a href="#" class="material-symbols-outlined btnBorrar" title="Borrar Inmueble" data-id="${inmueble.id_inmueble}" style="cursor: pointer;">delete</a>
-                    <a href="/Inmuebles/DetallesInmueble/${inmueble.id_inmueble}" class="material-symbols-outlined" title="Detalles Inmueble">visibility</a>
+              <td>${contrato.id_contrato}</td>
+              <td>${nombreInquilino}</td>
+              <td>${direccionInmueble}</td>
+              <td>${new Date(contrato.fecha_inicio).toLocaleDateString("es-ES")}</td>
+              <td>${new Date(contrato.fecha_fin).toLocaleDateString("es-ES")}</td>
+              <td>${precioInmueble}</td>
+              <td>${contrato.monto}</td>
+              <td>${contrato.vigencia ? 'Vigente' : 'No Vigente'}</td>
+              <td>
+                <a href="/Contratos/EditarContrato/${contrato.id_contrato}" class="material-symbols-outlined" title="Editar Contrato">edit_note</a>
+                
                 </td>
-              `;
+            `;
             tableBody.appendChild(row);
           });
         } else {
@@ -59,13 +70,14 @@ document.addEventListener("DOMContentLoaded", function () {
         Swal.fire("Ocurrió un error al cargar los contratos");
       });
   }
+  
 
   // Listeners para los botones
   btnVigentes.addEventListener("click", function () {
-    cargarInmuebles("/Inmuebles/ListadoInmueblesAlquilados"); //cambiar
+    cargarContratos("/Contratos/ContratosVigentes");
   });
 
   btnTerminados.addEventListener("click", function () {
-    cargarInmuebles("/Inmuebles/ListadoInmueblesDisponibles"); //cambiar
+    cargarContratos("/Contratos/ContratosTerminados");
   });
 });
