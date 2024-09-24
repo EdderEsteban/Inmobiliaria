@@ -30,6 +30,7 @@ namespace Inmobiliaria.Controllers
         [HttpGet]
         public IActionResult CrearPago(int id) // el pago se debe hacer para un inmueble, no crear solo...
         {
+            Console.WriteLine($"este es el id en controller: {id}");
             // Obtener el inmueble por ID
             var inmueblexId = new RepositorioInmuebles().ObtenerInmueble(id);
             if (inmueblexId == null)

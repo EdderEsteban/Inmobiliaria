@@ -45,24 +45,27 @@ function buscarInquilinos() {
         Swal.fire("No existen resultados a su busqueda.");
         form.reset();
       } else {
+        console.log("este es data", data);
         // Actualizar el contenido de la tabla con los datos recibidos
         const tableBody = document.querySelector("#tbodyInquilinos");
         tableBody.innerHTML = ""; // Limpiar el contenido actual
 
-        data.forEach((propietario) => {
+        data.forEach((inquilino) => {
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${propietario.nombre}</td>
-            <td>${propietario.apellido}</td>
-            <td>${propietario.dni}</td>
-            <td>${propietario.direccion}</td>
-            <td>${propietario.telefono}</td>
-            <td>${propietario.correo}</td>
+            <td>${inquilino.nombre}</td>
+            <td>${inquilino.apellido}</td>
+            <td>${inquilino.dni}</td>
+            <td>${inquilino.direccion}</td>
+            <td>${inquilino.telefono}</td>
+            <td>${inquilino.correo}</td>
             <td>
-              <a href="/Propietarios/EditarPropietario/${propietario.id_Propietario}" 
+              <a href="/inquilinos/EditarInquilino/${inquilino.id_inquilino}" 
                 title="Editar" class="material-symbols-outlined">edit_note</a>
-              <a href="/Propietarios/EliminarPropietario/${propietario.id_Propietario}" 
+              <a href="/inquilinos/EliminarInilino/${inquilino.id_inquilino}" 
                title="Eliminar" class="material-symbols-outlined">delete</a>
+              <a href="/Pago/CrearPago/${inquilino.id_inquilino}" 
+                title="Pago" class="material-symbols-outlined">paid</a>
             </td>
           `;
           tableBody.appendChild(row);
