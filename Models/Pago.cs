@@ -14,14 +14,15 @@ public class Pago
 
     public int Id_Inmueble { get; set; }
 
-    [Required(ErrorMessage = "La fecha de es obligatoria.")]
-    [Display(Name = "Fecha de Pago")]
-    [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-    [DataType(DataType.Date)]
-    public DateTime Fecha_Pago { get; set; }
+    public DateTime Fecha_Pago { get; set; } = DateTime.Now;
+    
     public decimal Monto { get; set; }
+    
+    [DataType(DataType.Date)]
+    [DisplayFormat(DataFormatString = "{0:MM/yyyy}", ApplyFormatInEditMode = true)]
+    public DateTime Periodo { get; set; }
 
     public int Id_Usuario { get; set; }
 
-    public DateTime Fecha { get; set; } = DateTime.Now;
+   
 }

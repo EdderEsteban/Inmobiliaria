@@ -6,59 +6,99 @@
     var listaContratos = ViewBag.contratos as List<Contrato>;
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
-<div class="text-center">
-    <h2 class="display-4">Listado de Pagos</h2>
-    <div class="text-start mb-3">
-        <a class="material-symbols-outlined" asp-controller="Pago" asp-action="NuevoPago"
-            title="Nuevo Pago">currency_exchange</a>
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="text-center mb-4">
+    <h1 class="display-4">Listado de Pagos</h1>
+</div>
+<div class="row">
+    <div class="col-1">
         <div class="mb-3">
-            <strong><label for="txtBusqueda" class="form-label">Buscar:</label></strong>
-            <input type="text" id="txtBusqueda" class="form-control-sm" placeholder="Buscar Pago...">
+            <a class="btn btn-success btn-sm" asp-controller="Pago" asp-action="CrearPago" title="Crear Pago">Nuevo
+                <i class="material-symbols-outlined">person_pin_circle</i></a>
         </div>
     </div>
-    <table class="table table-sm table-striped table-hover table-light">
-        <tr>
-            <th>N° de Pago</th>
-            <th>N° de Contrato</th>
-            <th>Inmueble</th>
-            <th>Inquilino</th>
-            <th>Fecha de Pago</th>
-            <th>Monto </th>
-            <th>Acciones</th>
-        </tr>
-        @foreach (var pago in Model)
-        {
-            <tr>
-                <td>@(pago.Id_Pago)</td>
-                <td>@(pago.Id_Contrato)</td>
-                <td>
-                    @{
-                        var contrato = listaContratos.FirstOrDefault(c => c.Id_contrato == pago.Id_Contrato);
-                        var inmueble = listaInmuebles.FirstOrDefault(i => i.Id_inmueble == contrato.Id_inmueble);
-                        if (inmueble != null)
+    <div class="col-11">
+        <div class="container">
+            <div class="table-responsive">
+                <table id="tblPagos" class="table table-sm table-striped table-hover table-light">
+                    <thead>
+                        <tr>
+                            <th>N° de Pago</th>
+                            <th>N° de Contrato</th>
+                            <th>Inmueble</th>
+                            <th>Inquilino</th>
+                            <th>Fecha de Pago</th>
+                            <th>Monto </th>
+                            <th>Periodo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var pago in Model)
                         {
-                            @inmueble.Direccion
+                            <tr>
+                                <td>@(pago.Id_Pago)</td>
+                                <td>@(pago.Id_Contrato)</td>
+                                <td>
+                                    @{
+                                        var contrato = listaContratos?.FirstOrDefault(c => c.Id_contrato == pago.Id_Contrato);
+                                        var inmueble = listaInmuebles?.FirstOrDefault(i => i.Id_inmueble ==
+                                        contrato?.Id_inmueble);
+                                        if (inmueble != null)
+                                        {
+                                            @inmueble.Direccion
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @{
+                                        var inquilino = listaInquilinos?.FirstOrDefault(i => i.Id_inquilino ==
+                                        contrato?.Id_inquilino);
+                                        if (inquilino != null)
+                                        {
+                                            @($"{inquilino.Nombre} {@inquilino.Apellido}")
+                                            ;
+                                        }
+                                    }
+                                </td>
+                                <td>@pago.Fecha_Pago.ToString("dd/MM/yyyy")</td>
+                                <td>@(pago.Monto.ToString("C2"))</td>
+                                <td>@(pago.Periodo.ToString("0:MM/yyyy"))</td>
+                                <td>
+                                    <a class="material-symbols-outlined" asp-action="Editar"
+                                        asp-route-id="@pago.Id_Pago">edit_note</a>
+                                    <a class="material-symbols-outlined" asp-action="EliminarPago"
+                                        asp-route-id="@pago.Id_Pago">delete</a>
+                                </td>
+                            </tr>
                         }
-                    }
-                </td>
-                <td>
-                    @{
-                        var inquilino = listaInquilinos.FirstOrDefault(i => i.Id_inquilino == contrato.Id_inquilino);
-                        if (inquilino != null)
-                        {
-                            @($"{inquilino.Nombre} {@inquilino.Apellido}");
-                        }
-                    }
-                </td>
-                <td>@pago.Fecha_Pago.ToString("dd/MM/yyyy")</td>
-                <td>@(pago.Monto)</td>
-                <td>
-                    <a class="material-symbols-outlined" asp-action="Editar" asp-route-id="@pago.Id_Pago">edit_note</a>
-                    <a class="material-symbols-outlined" asp-action="EliminarPago" asp-route-id="@pago.Id_Pago">delete</a>
-                </td>
-            </tr>
-        }
-
-    </table>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<script src="/js/DataTable.js" asp-append-version="true"></script>

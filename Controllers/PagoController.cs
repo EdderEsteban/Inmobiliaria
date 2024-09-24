@@ -3,75 +3,132 @@ using Inmobiliaria.Models;
 using Inmobiliaria.Repositorios;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Inmobiliaria.Controllers;
-
-public class PagoController : Controller 
+namespace Inmobiliaria.Controllers
 {
-    private readonly ILogger<PagoController> _logger;
-
-    // Repositorio para interactuar con la base de datos
-    private readonly RepositorioPago repositorio;
-
-    public PagoController(ILogger<PagoController> logger)
+    public class PagoController : Controller
     {
-        _logger = logger;
-        repositorio = new RepositorioPago();
-    }
+        private readonly ILogger<PagoController> _logger;
+        private readonly RepositorioPago repositorio;
 
-    [HttpGet]
-    public IActionResult ListadoPagos()
-    {
-        //Lista de Pagos
-        var lista = repositorio.ListarPagos();
-
-        //Enviar la lista de Inmuebles
-        RepositorioInmuebles repoInmueble = new RepositorioInmuebles();
-        var listaInmuebles = repoInmueble.ListarTodosInmuebles();
-        ViewBag.inmuebles = listaInmuebles;
-
-        // Enviar la lista de Inquilinos
-        RepositorioInquilinos repoInquilino = new RepositorioInquilinos();
-        var listaInquilinos = repoInquilino.ListarInquilinos();
-        ViewBag.inquilinos = listaInquilinos;
-
-        //Enviar la lista de Contratos
-        RepositorioContratos repoContratos = new RepositorioContratos();
-        var listaContratos = repoContratos.ListarContratos();
-        ViewBag.contratos = listaContratos;
-
-        return View(lista);
-    }
-
-    [HttpGet]
-    public IActionResult CrearPago(int id)
-    {
-        //Enviar el Inmueble
-        RepositorioInmuebles repoInmueble = new RepositorioInmuebles();
-        var inmueblexId = repoInmueble.ObtenerInmueble(id);
-        ViewBag.inmueble = inmueblexId;
-
-        //Enviar la lista de Contratos
-        RepositorioContratos repoContratos = new RepositorioContratos();
-        var contratoxId = repoContratos.ObtenerContratoInmueble(id);
-        ViewBag.contratos = contratoxId;
-
-        // Enviar la lista de Inquilinos
-        RepositorioInquilinos repoInquilino = new RepositorioInquilinos();
-        var inquilinoxId = repoInquilino.ObtenerInquilino(contratoxId.Id_inquilino);
-        ViewBag.inquilino = inquilinoxId;
-
-        return View(); 
-    }
-
-    [HttpPost]
-    public IActionResult GuardarPago(Pago pago)
-    {
-        if (ModelState.IsValid)
+        public PagoController(ILogger<PagoController> logger)
         {
-            RepositorioPago repo = new RepositorioPago();
-            repo.GuardarNuevo(pago);
+            _logger = logger;
+            repositorio = new RepositorioPago();
+        }
+
+        [HttpGet]
+        public IActionResult ListadoPagos()
+        {
+            var lista = repositorio.ListarPagos();
+            ViewBag.inmuebles = new RepositorioInmuebles().ListarTodosInmuebles();
+            ViewBag.inquilinos = new RepositorioInquilinos().ListarInquilinos();
+            ViewBag.contratos = new RepositorioContratos().ListarContratos();
+
+            return View(lista);
+        }
+
+        [HttpGet]
+        public IActionResult CrearPago(int id)
+        {
+            var inmueblexId = new RepositorioInmuebles().ObtenerInmueble(id);
+            if (inmueblexId == null)
+            {
+                return NotFound(); // Retorna un 404 si no se encuentra el inmueble
+            }
+
+            ViewBag.inmueble = inmueblexId;
+            var contratoxId = new RepositorioContratos().ObtenerContratoInmueble(id);
+            if (contratoxId == null)
+            {
+                return NotFound(); // Retorna un 404 si no se encuentra el contrato
+            }
+
+            ViewBag.contratos = contratoxId;
+            var inquilinoxId = new RepositorioInquilinos().ObtenerInquilino(contratoxId.Id_inquilino);
+            ViewBag.inquilino = inquilinoxId;
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult GuardarPago(Pago pago)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    repositorio.GuardarNuevo(pago);
+                    TempData["SuccessMessage"] = "Pago guardado exitosamente.";
+                    return RedirectToAction(nameof(ListadoPagos));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al guardar el pago.");
+                    ModelState.AddModelError("", "Ocurrió un error al guardar el pago. Intente nuevamente.");
+                }
+            }
+            return View("CrearPago", pago);
+        }
+
+        [HttpGet]
+        public IActionResult EditarPago(int id)
+        {
+            var pago = repositorio.ObtenerPago(id);
+            if (pago == null)
+            {
+                return NotFound(); // Retorna un 404 si no se encuentra el pago
+            }
+
+            ViewBag.contratos = new RepositorioContratos().ListarContratos();
+            ViewBag.inquilinos = new RepositorioInquilinos().ListarInquilinos();
+            return View(pago);
+        }
+
+        [HttpPost]
+        public IActionResult ActualizarPago(Pago pago)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    repositorio.ActualizarPago(pago);
+                    TempData["SuccessMessage"] = "Pago actualizado exitosamente.";
+                    return RedirectToAction(nameof(ListadoPagos));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error al actualizar el pago.");
+                    ModelState.AddModelError("", "Ocurrió un error al actualizar el pago. Intente nuevamente.");
+                }
+            }
+            return View("EditarPago", pago);
+        }
+
+        [HttpPost]
+        public IActionResult EliminarPago(int id)
+        {
+            try
+            {
+                repositorio.EliminarPago(id);
+                TempData["SuccessMessage"] = "Pago eliminado exitosamente.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el pago.");
+                TempData["ErrorMessage"] = "Ocurrió un error al eliminar el pago. Intente nuevamente.";
+            }
             return RedirectToAction(nameof(ListadoPagos));
         }
-        return View("CrearPago", pago);
+
+        [HttpGet]
+        public IActionResult DetallesPago(int id)
+        {
+            var pago = repositorio.ObtenerPago(id);
+            if (pago == null)
+            {
+                return NotFound(); // Retorna un 404 si no se encuentra el pago
+            }
+            return View(pago);
+        }
     }
 }
