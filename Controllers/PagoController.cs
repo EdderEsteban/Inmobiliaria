@@ -28,7 +28,13 @@ namespace Inmobiliaria.Controllers
         }
 
         [HttpGet]
-        public IActionResult CrearPago(int id) // el pago se debe hacer para un inmueble, no crear solo...
+        public IActionResult BuscarInquilinoPago()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult CrearPago(int id)
         {
             Console.WriteLine($"este es el id en controller: {id}");
             // Obtener el inmueble por ID
@@ -147,6 +153,59 @@ namespace Inmobiliaria.Controllers
                 return NotFound(); // Retorna un 404 si no se encuentra el pago
             }
             return View(pago);
+        }
+
+        [HttpPost]
+        public IActionResult BuscarInqPago([FromBody] BusquedaInquilinos busqueda)
+        {
+            // Realiza la búsqueda de los inquilinos
+            var inquilinos = new RepositorioInquilinos().BuscarInquilinos(busqueda);
+
+            // Itera sobre los inquilinos encontrados y busca el contrato e inmueble asociado para cada uno
+            var resultadoConContratosEInmuebles = inquilinos
+                .Select(i =>
+                {
+                    // Obtener el contrato del inquilino
+                    var contrato = new RepositorioContratos().ObtenerContratoxInquilino(
+                        i.Id_inquilino
+                    );
+
+                    // Si el contrato existe, obtener el inmueble asociado
+                    var inmueble =
+                        contrato != null
+                            ? new RepositorioInmuebles().ObtenerInmueble(contrato.Id_inmueble)
+                            : null;
+
+                    // Retorna un objeto que contiene la información del inquilino, contrato e inmueble
+                    return new
+                    {
+                        Id_Inquilino = i.Id_inquilino,
+                        Nombre = i.Nombre,
+                        Apellido = i.Apellido,
+                        Dni = i.Dni,
+                        Contrato = contrato != null
+                            ? new
+                            {
+                                Id_Contrato = contrato.Id_contrato,
+                                Id_Inmueble = contrato.Id_inmueble,
+                                Fecha_Inicio = contrato.Fecha_inicio,
+                                Fecha_Fin = contrato.Fecha_fin,
+                                Inmueble = inmueble != null
+                                    ? new
+                                    {
+                                        Id_Inmueble = inmueble.Id_inmueble,
+                                        inmueble.Direccion,
+                                    }
+                                    : null // Si no hay inmueble, será null
+                            }
+                            : null // Si no hay contrato, será null
+                    };
+                })
+                .Where(x => x.Contrato != null) // Filtra solo los que tienen contrato
+                .ToList();
+
+            // Devuelve los resultados como JSON, incluyendo solo inquilinos con contrato e inmueble
+            return Json(resultadoConContratosEInmuebles);
         }
     }
 }

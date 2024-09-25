@@ -12,7 +12,7 @@ namespace Inmobiliaria.Models
 
         public BusquedaInmuebles()
         {
-            Resultados = new List<Inmuebles>();
+            Resultados = new List<Inmuebles>(); 
         }
     }
 }

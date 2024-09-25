@@ -8,14 +8,15 @@ namespace Inmobiliaria.Repositorios;
 // Clase RepositorioPropietarios que hereda de RepositorioBD
 public class RepositorioContratos : InmobiliariaBD.RepositorioBD
 {
-    public RepositorioContratos() { } 
+    public RepositorioContratos() { }
 
     public IList<Contrato> ListarContratos()
     {
         var contratos = new List<Contrato>();
         using (var connection = new MySqlConnection(ConnectionString))
         {
-            var sql = @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin, vigencia 
+            var sql =
+                @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin, vigencia 
                 FROM contrato";
             using (var command = new MySqlCommand(sql, connection))
             {
@@ -60,7 +61,8 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
         var contratos = new List<Contrato>();
         using (var connection = new MySqlConnection(ConnectionString))
         {
-            var sql = @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin, vigencia 
+            var sql =
+                @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin, vigencia 
                 FROM contrato
                 WHERE vigencia = 1";
             using (var command = new MySqlCommand(sql, connection))
@@ -106,7 +108,8 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
         var contratos = new List<Contrato>();
         using (var connection = new MySqlConnection(ConnectionString))
         {
-            var sql = @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin, vigencia 
+            var sql =
+                @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin, vigencia 
                 FROM contrato
                 WHERE vigencia = 0";
             using (var command = new MySqlCommand(sql, connection))
@@ -146,13 +149,13 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
         return contratos;
     }
 
-
     public int GuardarNuevo(Contrato contrato)
     {
         int id = 0;
         using (var connection = new MySqlConnection(ConnectionString))
         {
-            var sql = @"INSERT INTO contrato (id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin)
+            var sql =
+                @"INSERT INTO contrato (id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin)
                             VALUES (@id_inquilino, @id_inmueble, @monto, @fecha_inicio, @fecha_fin);
                             SELECT LAST_INSERT_ID();";
             using (var command = new MySqlCommand(sql, connection))
@@ -176,7 +179,8 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
         Contrato? contrato = null;
         using (var connection = new MySqlConnection(ConnectionString))
         {
-            var sql = @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin
+            var sql =
+                @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin
                             FROM contrato
                             WHERE id_contrato = @id_contrato";
             using (var command = new MySqlCommand(sql, connection))
@@ -204,12 +208,51 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
         return contrato;
     }
 
+    public Contrato? ObtenerContratoxInquilino(int id)
+    {
+        Contrato? contrato = null;
+        using (var connection = new MySqlConnection(ConnectionString))
+        {
+            var sql =
+                @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin
+              FROM contrato
+              WHERE id_inquilino = @id_inquilino
+              AND FECHA_FIN >= CURDATE()";
+
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                // Cambié el parámetro de @id_contrato a @id_inquilino
+                command.Parameters.AddWithValue("@id_inquilino", id);
+
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        contrato = new Contrato
+                        {
+                            Id_contrato = reader.GetInt32("id_contrato"),
+                            Id_inquilino = reader.GetInt32("id_inquilino"),
+                            Id_inmueble = reader.GetInt32("id_inmueble"),
+                            Monto = reader.GetInt32("monto"),
+                            Fecha_inicio = reader.GetDateTime("fecha_inicio"),
+                            Fecha_fin = reader.GetDateTime("fecha_fin")
+                        };
+                    }
+                }
+                connection.Close();
+            }
+        }
+        return contrato;
+    }
+
     public Contrato ObtenerContratoInmueble(int id)
     {
         Contrato? contrato = null;
         using (var connection = new MySqlConnection(ConnectionString))
         {
-            var sql = @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin, vigencia
+            var sql =
+                @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin, vigencia
                             FROM contrato
                             WHERE id_inmueble = @id_inmueble";
 
@@ -243,7 +286,8 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
     {
         using (var connection = new MySqlConnection(ConnectionString))
         {
-            var sql = @"UPDATE contrato
+            var sql =
+                @"UPDATE contrato
                             SET id_inquilino = @id_inquilino,
                                 id_inmueble = @id_inmueble,
                                 monto = @monto,
@@ -290,9 +334,10 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
 
         using (var connection = new MySqlConnection(ConnectionString))
         {
-            var sql = "SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin " +
-                      "FROM contrato " +
-                      "WHERE id_inmueble = @IdInmueble";
+            var sql =
+                "SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin "
+                + "FROM contrato "
+                + "WHERE id_inmueble = @IdInmueble";
 
             using (var command = new MySqlCommand(sql, connection))
             {
@@ -303,15 +348,17 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
                 {
                     while (reader.Read())
                     {
-                        contratos.Add(new Contrato
-                        {
-                            Id_contrato = reader.GetInt32("id_contrato"),
-                            Id_inquilino = reader.GetInt32("id_inquilino"),
-                            Id_inmueble = reader.GetInt32("id_inmueble"),
-                            Monto = reader.GetInt32("monto"),
-                            Fecha_inicio = reader.GetDateTime("fecha_inicio"),
-                            Fecha_fin = reader.GetDateTime("fecha_fin")
-                        });
+                        contratos.Add(
+                            new Contrato
+                            {
+                                Id_contrato = reader.GetInt32("id_contrato"),
+                                Id_inquilino = reader.GetInt32("id_inquilino"),
+                                Id_inmueble = reader.GetInt32("id_inmueble"),
+                                Monto = reader.GetInt32("monto"),
+                                Fecha_inicio = reader.GetDateTime("fecha_inicio"),
+                                Fecha_fin = reader.GetDateTime("fecha_fin")
+                            }
+                        );
                     }
                 }
                 connection.Close();
@@ -320,5 +367,4 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
 
         return contratos;
     }
-
 }

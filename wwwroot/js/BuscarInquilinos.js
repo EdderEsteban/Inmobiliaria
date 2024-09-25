@@ -64,8 +64,6 @@ function buscarInquilinos() {
                 title="Editar" class="material-symbols-outlined">edit_note</a>
               <a href="/inquilinos/EliminarInilino/${inquilino.id_inquilino}" 
                title="Eliminar" class="material-symbols-outlined">delete</a>
-              <a href="/Pago/CrearPago/${inquilino.id_inquilino}" 
-                title="Pago" class="material-symbols-outlined">paid</a>
             </td>
           `;
           tableBody.appendChild(row);
