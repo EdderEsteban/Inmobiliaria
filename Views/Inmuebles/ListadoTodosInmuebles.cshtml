@@ -29,6 +29,7 @@
             <a class="btn btn-success btn-sm" asp-controller="Inmuebles" asp-action="CrearInmueble"
                 title="Crear Contrato">Nuevo
                 <i class="material-symbols-outlined">person_pin_circle</i></a>
+                
         </div>
     </div>
     <div class="col-11">
@@ -71,8 +72,9 @@
                                     <a class="material-symbols-outlined" asp-controller="Inmuebles"
                                         asp-action="EditarInmueble" asp-route-Id="@inmueble?.Id_inmueble"
                                         title="Editar Inmueble" asp-route-viewName="ListadoTodosInmuebles">edit_note</a>
-                                    <a class="material-symbols-outlined btnBorrar" title="Borrar Inmueble"
-                                        data-id="@inmueble.Id_inmueble" style="cursor: pointer;">delete</a>
+                                    <a class="material-symbols-outlined" title="Borrar Inmueble"
+                                        asp-action="EliminarInmueble" asp-route-id="@inmueble?.Id_inmueble"
+                                        style="cursor: pointer;">delete</a>
                                     <a class="material-symbols-outlined" asp-controller="Inmuebles"
                                         asp-action="DetallesInmueble" asp-route-Id="@inmueble?.Id_inmueble"
                                         title="Detalles Inmueble">visibility</a>

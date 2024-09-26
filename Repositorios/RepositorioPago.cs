@@ -14,7 +14,8 @@ public class RepositorioPago : InmobiliariaBD.RepositorioBD
         var pagos = new List<Pago>();
         using (var connection = new MySqlConnection(ConnectionString))
         {
-            var sql = @"SELECT id_pago, id_contrato, fecha_pago, monto, periodo 
+            var sql =
+                @"SELECT id_pago, id_contrato, fecha_pago, monto, periodo 
             FROM pago";
             using (var command = new MySqlCommand(sql, connection))
             {
@@ -23,14 +24,16 @@ public class RepositorioPago : InmobiliariaBD.RepositorioBD
                 {
                     while (reader.Read())
                     {
-                        pagos.Add(new Pago
-                        {
-                            Id_Pago = reader.GetInt32("id_pago"),
-                            Id_Contrato = reader.GetInt32("id_contrato"),
-                            Fecha_Pago = reader.GetDateTime("fecha_pago"),
-                            Monto = reader.GetDecimal("monto"),
-                            Periodo = reader.GetDateTime("periodo"),  
-                        });
+                        pagos.Add(
+                            new Pago
+                            {
+                                Id_Pago = reader.GetInt32("id_pago"),
+                                Id_Contrato = reader.GetInt32("id_contrato"),
+                                Fecha_Pago = reader.GetDateTime("fecha_pago"),
+                                Monto = reader.GetDecimal("monto"),
+                                Periodo = reader.GetDateTime("periodo"),
+                            }
+                        );
                     }
                 }
                 connection.Close();
@@ -44,8 +47,9 @@ public class RepositorioPago : InmobiliariaBD.RepositorioBD
         int id = 0;
         using (var connection = new MySqlConnection(ConnectionString))
         {
-            var sql = @"INSERT INTO pago (id_contrato, fecha_pago, monto, periodo) 
-                        VALUES (@id_contrato, @fecha_pago, @monto, @periodo); 
+            var sql =
+                @"INSERT INTO pago (id_contrato, fecha_pago, monto, periodo, id_inquilino) 
+                        VALUES (@id_contrato, @fecha_pago, @monto, @periodo, @id_inquilino); 
                         SELECT LAST_INSERT_ID();";
             using (var command = new MySqlCommand(sql, connection))
             {
@@ -53,6 +57,7 @@ public class RepositorioPago : InmobiliariaBD.RepositorioBD
                 command.Parameters.AddWithValue("@fecha_pago", pago.Fecha_Pago);
                 command.Parameters.AddWithValue("@monto", pago.Monto);
                 command.Parameters.AddWithValue("@periodo", pago.Periodo);
+                command.Parameters.AddWithValue("@id_inquilino", pago.Id_Inquilino);
 
                 connection.Open();
                 id = Convert.ToInt32(command.ExecuteScalar());
@@ -67,7 +72,8 @@ public class RepositorioPago : InmobiliariaBD.RepositorioBD
         Pago? pago = null;
         using (var connection = new MySqlConnection(ConnectionString))
         {
-            var sql = @"SELECT id_pago, id_contrato, fecha_pago, monto, periodo 
+            var sql =
+                @"SELECT id_pago, id_contrato, fecha_pago, monto, periodo, id_inquilino 
             FROM pago WHERE id_pago = @id_pago";
             using (var command = new MySqlCommand(sql, connection))
             {
@@ -84,6 +90,7 @@ public class RepositorioPago : InmobiliariaBD.RepositorioBD
                             Fecha_Pago = reader.GetDateTime("fecha_pago"),
                             Monto = reader.GetDecimal("monto"),
                             Periodo = reader.GetDateTime("periodo"),
+                            Id_Inquilino = reader.GetInt32("id_inquilino"),
                         };
                     }
                 }
@@ -97,7 +104,8 @@ public class RepositorioPago : InmobiliariaBD.RepositorioBD
     {
         using (var connection = new MySqlConnection(ConnectionString))
         {
-            var sql = @"UPDATE pago 
+            var sql =
+                @"UPDATE pago 
                         SET id_contrato = @id_contrato, 
                             fecha_pago = @fecha_pago, 
                             monto = @monto,
@@ -133,6 +141,50 @@ public class RepositorioPago : InmobiliariaBD.RepositorioBD
             }
         }
     }
-}
 
-    
+    public bool ExistePago(Pago pago)
+    {
+        bool resultado = false; // Inicializa el resultado en falso
+
+        try
+        {
+            // Obtén el mes y año del periodo
+            int periodoMes = pago.Periodo.Month;
+            int periodoAnio = pago.Periodo.Year;
+
+            // Consulta para verificar si existe el pago
+            var query =
+                @"SELECT COUNT(*) FROM pago 
+            WHERE id_inquilino = @id_inquilino 
+            AND id_contrato = @id_contrato 
+            AND MONTH(periodo) = @periodoMes 
+            AND YEAR(periodo) = @periodoAnio";
+
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                connection.Open();
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id_inquilino", pago.Id_Inquilino);
+                    command.Parameters.AddWithValue("@id_contrato", pago.Id_Contrato);
+                    command.Parameters.AddWithValue("@periodoMes", periodoMes);
+                    command.Parameters.AddWithValue("@periodoAnio", periodoAnio);
+
+                    // Ejecuta la consulta y convierte el resultado
+                    var count = Convert.ToInt32(command.ExecuteScalar());
+
+                    // Si el conteo es mayor que 0, significa que existe el pago
+                    resultado = count > 0;
+                    Console.WriteLine($"Existe el pago: {resultado}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Maneja la excepción si ocurre un error
+            Console.WriteLine($"Error al verificar la existencia del pago: {ex.Message}");
+        }
+
+        return resultado; // Retorna el resultado
+    }
+}

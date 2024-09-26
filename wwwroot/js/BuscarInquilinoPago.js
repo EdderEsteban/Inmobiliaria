@@ -53,20 +53,37 @@ function buscarInquilinos() {
         tableBody.innerHTML = ""; // Limpiar el contenido actual
 
         data.forEach((inquilino) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${inquilino.contrato.id_Contrato}</td>
-            <td>${inquilino.nombre} ${inquilino.apellido}</td>
-            <td>${inquilino.dni}</td>
-            <td>${inquilino.contrato.inmueble.direccion}</td>
-            <td>${new Date(inquilino.contrato.fecha_Inicio).toLocaleDateString("es-ES")}</td>
-            <td>${new Date(inquilino.contrato.fecha_Fin).toLocaleDateString("es-ES")}</td>
-            <td>
-              <a href="/Pago/CrearPago/${inquilino.id_Inquilino}" 
-                title="Pago" class="material-symbols-outlined">paid</a>
-            </td>
-          `;
-          tableBody.appendChild(row);
+          // Verifica si el inquilino tiene contratos
+          if (
+            inquilino.contratosEInmuebles &&
+            inquilino.contratosEInmuebles.length > 0
+          ) {
+            // Iterar sobre cada contrato del inquilino
+            inquilino.contratosEInmuebles.forEach((contrato) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                      <td>${contrato.id_Contrato}</td>
+                      <td>${inquilino.nombre} ${inquilino.apellido}</td>
+                      <td>${inquilino.dni}</td>
+                      <td>${
+                        contrato.inmueble
+                          ? contrato.inmueble.direccion
+                          : "Sin inmueble"
+                      }</td>
+                      <td>${new Date(contrato.fecha_Inicio).toLocaleDateString(
+                        "es-ES"
+                      )}</td>
+                      <td>${new Date(contrato.fecha_Fin).toLocaleDateString(
+                        "es-ES"
+                      )}</td>
+                      <td>
+                          <a href="/Pago/CrearPago?idInquilino=${inquilino.id_Inquilino}&idContrato=${contrato.id_Contrato}" 
+                              title="Pago" class="material-symbols-outlined">paid</a>
+                      </td>
+                  `;
+              tableBody.appendChild(row);
+            });
+          }
         });
         form.reset();
       }

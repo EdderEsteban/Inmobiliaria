@@ -161,12 +161,23 @@ public class InmueblesController : Controller
         return View();
     }
 
-    // Metodo para eliminar un inmueble
-    [HttpGet]
+    // Método para eliminar un inmueble
+
     public IActionResult EliminarInmueble(int id)
     {
-        repositorio.EliminarInmueble(id);
-        return RedirectToAction(nameof(ListadoTodosInmuebles));
+        var contrato = new RepositorioContratos().InmuebleTieneContrato(id);
+        if (contrato > 0)
+        {
+            TempData["ErrorMessage"] =
+                "No se puede eliminar el inmueble porque tiene un contrato activo.";
+            return RedirectToAction(nameof(ListadoTodosInmuebles));
+        }
+        else
+        {
+            repositorio.EliminarInmueble(id);
+            TempData["SuccessMessage"] = "Inmueble eliminado exitosamente.";
+            return RedirectToAction(nameof(ListadoTodosInmuebles));
+        }
     }
 
     // Metodo para mostrar los detalles de un inmueble

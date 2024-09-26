@@ -19,7 +19,7 @@ public class Pago
     public decimal Monto { get; set; }
     
     [DataType(DataType.Date)]
-    [DisplayFormat(DataFormatString = "{0:MM/yyyy}", ApplyFormatInEditMode = true)]
+    [DisplayFormat(DataFormatString = "{dd/MM/yyyy}", ApplyFormatInEditMode = true)]
     public DateTime Periodo { get; set; }
 
     public int Id_Usuario { get; set; }

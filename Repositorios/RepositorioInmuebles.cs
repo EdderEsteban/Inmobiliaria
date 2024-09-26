@@ -25,7 +25,8 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
             FROM 
                 inmueble i
                 INNER JOIN tipo_inmueble ti ON i.Id_tipo = ti.Id_tipo
-                INNER JOIN propietario p ON i.Id_propietario = p.Id_propietario";
+                INNER JOIN propietario p ON i.Id_propietario = p.Id_propietario
+                WHERE i.borrado = 0";
 
                 // Creación del comando SQL
                 using (var command = new MySqlCommand(sql, connection))
@@ -102,7 +103,7 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
                 inmueble i
                 INNER JOIN tipo_inmueble ti ON i.Id_tipo = ti.Id_tipo
                 INNER JOIN propietario p ON i.Id_propietario = p.Id_propietario
-                WHERE i.activo = 0";
+                WHERE i.activo = 0 AND i.borrado = 0";
 
                 // Creación del comando SQL
                 using (var command = new MySqlCommand(sql, connection))
@@ -179,7 +180,7 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
                 inmueble i
                 INNER JOIN tipo_inmueble ti ON i.Id_tipo = ti.Id_tipo
                 INNER JOIN propietario p ON i.Id_propietario = p.Id_propietario
-                 WHERE i.disponible = 1 AND i.activo = 1";
+                 WHERE i.disponible = 1 AND i.activo = 1 AND i.borrado = 0";
 
                 // Creación del comando SQL
                 using (var command = new MySqlCommand(sql, connection))
@@ -203,7 +204,7 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
                                 {
                                     Id_inmueble = reader.GetInt32(nameof(Inmuebles.Id_inmueble)),
                                     Direccion = reader.GetString(nameof(Inmuebles.Direccion)),
-                                    
+
                                     Uso = usoEnum,
                                     Tipo = new InmuebleTipo
                                     {
@@ -257,7 +258,7 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
                 inmueble i
                 INNER JOIN tipo_inmueble ti ON i.Id_tipo = ti.Id_tipo
                 INNER JOIN propietario p ON i.Id_propietario = p.Id_propietario
-                WHERE i.disponible = 0 AND i.activo = 1";
+                WHERE i.disponible = 0 AND i.activo = 1 AND i.borrado = 0";
 
                 // Creación del comando SQL
                 using (var command = new MySqlCommand(sql, connection))
@@ -580,18 +581,19 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
 
     // Método para obtener la lista de inmuebles por su dirección
     public List<Inmuebles> ObtenerInmueblesPorDireccion(string direccion)
-{
-    if (string.IsNullOrEmpty(direccion))
     {
-        // Retornar una lista vacía si no se proporciona una dirección válida
-        return new List<Inmuebles>(); 
-    }
-    var inmuebles = new List<Inmuebles>();
-    try
-    {
-        using (var connection = GetConnection())
+        if (string.IsNullOrEmpty(direccion))
         {
-            var sql = @"
+            // Retornar una lista vacía si no se proporciona una dirección válida
+            return new List<Inmuebles>();
+        }
+        var inmuebles = new List<Inmuebles>();
+        try
+        {
+            using (var connection = GetConnection())
+            {
+                var sql =
+                    @"
                 SELECT 
                     i.Id_inmueble, i.Direccion, i.Uso, i.Id_tipo, ti.Tipo AS TipoInmueble, 
                     i.Cantidad_Ambientes, i.Precio_Alquiler, i.Latitud, i.Longitud, 
@@ -603,61 +605,64 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
                 INNER JOIN propietario p ON i.Id_propietario = p.Id_propietario
                 WHERE i.Direccion LIKE @direccion;"; // Búsqueda por dirección
 
-            using (var command = new MySqlCommand(sql, connection))
-            {
-                // Parámetro de búsqueda con comodín para direcciones que contienen el texto ingresado
-                command.Parameters.AddWithValue("@direccion", direccion + "%");
-                connection.Open();
-
-                using (var reader = command.ExecuteReader())
+                using (var command = new MySqlCommand(sql, connection))
                 {
-                    while (reader.Read()) // Iterar sobre los resultados
+                    // Parámetro de búsqueda con comodín para direcciones que contienen el texto ingresado
+                    command.Parameters.AddWithValue("@direccion", direccion + "%");
+                    connection.Open();
+
+                    using (var reader = command.ExecuteReader())
                     {
-                        string uso = reader.GetString(nameof(Inmuebles.Uso));
-                        UsoInmueble usoEnum;
-                        Enum.TryParse(uso, out usoEnum); // Manejo de enums
-
-                        var inmueble = new Inmuebles
+                        while (reader.Read()) // Iterar sobre los resultados
                         {
-                            Id_inmueble = reader.GetInt32(nameof(Inmuebles.Id_inmueble)),
-                            Direccion = reader.GetString(nameof(Inmuebles.Direccion)),
-                            Uso = usoEnum,
-                            Tipo = new InmuebleTipo
-                            {
-                                Tipo = reader.GetString("TipoInmueble"),
-                            },
-                            Cantidad_Ambientes = reader.GetInt32(nameof(Inmuebles.Cantidad_Ambientes)),
-                            Precio_Alquiler = reader.GetDecimal(nameof(Inmuebles.Precio_Alquiler)),
-                            Latitud = reader.GetString(nameof(Inmuebles.Latitud)),
-                            Longitud = reader.GetString(nameof(Inmuebles.Longitud)),
-                            Id_propietario = reader.GetInt32(nameof(Inmuebles.Id_propietario)),
-                            Propietarios = new Propietarios
-                            {
-                                Nombre = reader.GetString("NombrePropietario"),
-                                Apellido = reader.GetString("ApellidoPropietario"),
-                            },
-                            Activo = reader.GetBoolean(nameof(Inmuebles.Activo)),
-                            Disponible = reader.GetBoolean(nameof(Inmuebles.Disponible)),
-                        };
+                            string uso = reader.GetString(nameof(Inmuebles.Uso));
+                            UsoInmueble usoEnum;
+                            Enum.TryParse(uso, out usoEnum); // Manejo de enums
 
-                        // Agregar el inmueble a la lista
-                        inmuebles.Add(inmueble);
+                            var inmueble = new Inmuebles
+                            {
+                                Id_inmueble = reader.GetInt32(nameof(Inmuebles.Id_inmueble)),
+                                Direccion = reader.GetString(nameof(Inmuebles.Direccion)),
+                                Uso = usoEnum,
+                                Tipo = new InmuebleTipo
+                                {
+                                    Tipo = reader.GetString("TipoInmueble"),
+                                },
+                                Cantidad_Ambientes = reader.GetInt32(
+                                    nameof(Inmuebles.Cantidad_Ambientes)
+                                ),
+                                Precio_Alquiler = reader.GetDecimal(
+                                    nameof(Inmuebles.Precio_Alquiler)
+                                ),
+                                Latitud = reader.GetString(nameof(Inmuebles.Latitud)),
+                                Longitud = reader.GetString(nameof(Inmuebles.Longitud)),
+                                Id_propietario = reader.GetInt32(nameof(Inmuebles.Id_propietario)),
+                                Propietarios = new Propietarios
+                                {
+                                    Nombre = reader.GetString("NombrePropietario"),
+                                    Apellido = reader.GetString("ApellidoPropietario"),
+                                },
+                                Activo = reader.GetBoolean(nameof(Inmuebles.Activo)),
+                                Disponible = reader.GetBoolean(nameof(Inmuebles.Disponible)),
+                            };
+
+                            // Agregar el inmueble a la lista
+                            inmuebles.Add(inmueble);
+                        }
                     }
                 }
             }
         }
-    }
-    catch (Exception ex)
-    {
-        // Manejar cualquier excepción
-        throw new Exception("Error al obtener los inmuebles por dirección", ex);
+        catch (Exception ex)
+        {
+            // Manejar cualquier excepción
+            throw new Exception("Error al obtener los inmuebles por dirección", ex);
+        }
+
+        // Retornar la lista de inmuebles encontrados
+        return inmuebles;
     }
 
-    // Retornar la lista de inmuebles encontrados
-    return inmuebles;
-}
-
-    
     // Método para actualizar los datos de un inmueble
     public void ActualizarInmueble(Inmuebles inmueble)
     {
@@ -835,22 +840,26 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
         return 0;
     }
 
-    // Metodo para Eliminar Inmueble
+    // Método para Eliminar Inmueble
     public int EliminarInmueble(int id)
     {
         try
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                var sql =
-                    @$"DELETE FROM inmueble 
-                WHERE {nameof(Inmuebles.Id_inmueble)} = @{nameof(Inmuebles.Id_inmueble)}";
+                string sql =
+                    @$"UPDATE Inmueble SET
+                            {nameof(Inmuebles.Borrado)} = @Borrado
+                            WHERE {nameof(Inmuebles.Id_inmueble)} = @Id_inmueble";
+
                 using (var command = new MySqlCommand(sql, connection))
                 {
-                    command.Parameters.AddWithValue($"@{nameof(Inmuebles.Id_inmueble)}", id);
+                    // Aquí se establece Borrado a true para indicar que el inmueble está borrado
+                    command.Parameters.AddWithValue("@Id_inmueble", id);
+                    command.Parameters.AddWithValue("@Borrado", true); // Marca como borrado
+
                     connection.Open();
-                    command.ExecuteNonQuery();
-                    connection.Close();
+                    return command.ExecuteNonQuery(); // Devuelve el número de filas afectadas
                 }
             }
         }
@@ -859,6 +868,5 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
             // Manejo de excepciones y registro del error
             throw new Exception("Error al eliminar el inmueble", ex);
         }
-        return 0;
     }
 }

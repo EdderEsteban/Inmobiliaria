@@ -46,6 +46,8 @@ public class Inmuebles
 
     public DateTime Fecha { get; set; } = DateTime.Now;
 
+    public bool Borrado { get; set; }
+
 }
 
 public enum UsoInmueble

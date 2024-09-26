@@ -208,43 +208,45 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
         return contrato;
     }
 
-    public Contrato? ObtenerContratoxInquilino(int id)
+    public List<Contrato> ObtenerContratosPorInquilino(int id)
+{
+    var contratos = new List<Contrato>();
+    using (var connection = new MySqlConnection(ConnectionString))
     {
-        Contrato? contrato = null;
-        using (var connection = new MySqlConnection(ConnectionString))
-        {
-            var sql =
-                @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin
+        var sql =
+            @"SELECT id_contrato, id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin
               FROM contrato
               WHERE id_inquilino = @id_inquilino
-              AND FECHA_FIN >= CURDATE()";
+              AND fecha_fin >= CURDATE()";
 
-            using (var command = new MySqlCommand(sql, connection))
+        using (var command = new MySqlCommand(sql, connection))
+        {
+            command.Parameters.AddWithValue("@id_inquilino", id);
+
+            connection.Open();
+            using (var reader = command.ExecuteReader())
             {
-                // Cambié el parámetro de @id_contrato a @id_inquilino
-                command.Parameters.AddWithValue("@id_inquilino", id);
-
-                connection.Open();
-                using (var reader = command.ExecuteReader())
+                while (reader.Read())
                 {
-                    if (reader.Read())
+                    var contrato = new Contrato
                     {
-                        contrato = new Contrato
-                        {
-                            Id_contrato = reader.GetInt32("id_contrato"),
-                            Id_inquilino = reader.GetInt32("id_inquilino"),
-                            Id_inmueble = reader.GetInt32("id_inmueble"),
-                            Monto = reader.GetInt32("monto"),
-                            Fecha_inicio = reader.GetDateTime("fecha_inicio"),
-                            Fecha_fin = reader.GetDateTime("fecha_fin")
-                        };
-                    }
+                        Id_contrato = reader.GetInt32("id_contrato"),
+                        Id_inquilino = reader.GetInt32("id_inquilino"),
+                        Id_inmueble = reader.GetInt32("id_inmueble"),
+                        Monto = reader.GetInt32("monto"),
+                        Fecha_inicio = reader.GetDateTime("fecha_inicio"),
+                        Fecha_fin = reader.GetDateTime("fecha_fin")
+                    };
+
+                    contratos.Add(contrato); // Agregar a la lista
                 }
-                connection.Close();
             }
+            connection.Close();
         }
-        return contrato;
     }
+    return contratos; // Retornar la lista de contratos
+}
+
 
     public Contrato ObtenerContratoInmueble(int id)
     {
@@ -327,6 +329,28 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
         }
     }
 
+    // Metodo para saber si un inmueble tiene contrato o no
+    public int InmuebleTieneContrato(int idInmueble)
+{
+    int contratoCount = 0;
+    using (var connection = new MySqlConnection(ConnectionString))
+    {
+        var sql = @"SELECT COUNT(*) 
+        FROM contrato 
+        WHERE id_inmueble = @IdInmueble 
+        AND fecha_fin > CURDATE();";
+        using (var command = new MySqlCommand(sql, connection))
+        {
+            command.Parameters.AddWithValue("@IdInmueble", idInmueble);
+            connection.Open();
+            contratoCount = Convert.ToInt32(command.ExecuteScalar());
+            connection.Close();
+        }
+    }
+    return contratoCount;
+}
+
+    
     // Metodo q se usa con InmueblesController para listar los contratos de un inmueble
     public IList<Contrato> ListarContratosPorInmueble(int idInmueble)
     {
