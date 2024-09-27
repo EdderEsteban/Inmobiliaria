@@ -211,6 +211,7 @@ namespace Inmobiliaria.Controllers
         [HttpPost]
         public IActionResult LoginIn(Login usuario)
         {
+            Console.WriteLine($"El modelo es valido: {ModelState.IsValid}");
             // Validar si el modelo es correcto
             if (ModelState.IsValid)
             {

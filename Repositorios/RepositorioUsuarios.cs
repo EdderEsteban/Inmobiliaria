@@ -141,7 +141,7 @@ namespace Inmobiliaria.Repositorios
                             usuario.Apellido
                         );
                         command.Parameters.AddWithValue(
-                            $"@{nameof(Usuario.Avatar)}",
+                            $"@{nameof(Usuario.Avatar)}",  
                             usuario.Avatar
                         );
                         command.Parameters.AddWithValue($"@{nameof(Usuario.Email)}", usuario.Email);
