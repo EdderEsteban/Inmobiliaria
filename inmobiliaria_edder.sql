@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-09-2024 a las 06:58:11
+-- Tiempo de generación: 27-09-2024 a las 07:09:53
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -610,10 +610,10 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `avatar`, `email`, `password`, `rol`, `fecha`, `borrado`) VALUES
-(30, 'Edder', 'Santibañez', '/Uploads/avatar_30Edderba3360fe-086f-4ab5-a8e2-7c7a3c2c8b0e.png', 'edder709@gmail.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Administrador', '2024-09-27 01:27:09', 0),
-(31, 'Edder', 'Santibañez', '/Uploads/avatar_31Edder.png', 'edder70@gmail.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Empleado', '2024-09-27 01:28:37', 0),
-(32, 'Edder', 'Santibañez', '/Uploads/avatar_32Edder26102dbe-cf43-44a2-88ac-974d84a5ae55.png', 'edder@gmail.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Administrador', '2024-09-27 01:37:12', 0),
-(33, 'Edder', 'Santibañez', '/Uploads\\avatar_Edder6bb2b680-9e65-439d-8c59-38cd87b7ee80.png', 'edder0@gmail.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Empleado', '2024-09-27 01:57:33', 0);
+(30, 'Administrador', 'Edder', '/Uploads/avatar_30Administrador3f38253e-8196-4823-9b5b-cd891e427468.png', 'admin@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Administrador', '2024-09-27 01:27:09', 0),
+(31, 'Empleado', 'Edder', '/Uploads/avatar_31Empleado33e553c9-cc10-46ff-9f78-cbb60281467b.png', 'emple@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Empleado', '2024-09-27 01:28:37', 0),
+(32, 'Jefe', 'DotNet', '/Uploads/avatar_32Jefe9d36cec6-0ebd-451a-a698-375ec4fecd9e.png', 'dotNet@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Administrador', '2024-09-27 01:37:12', 0),
+(33, 'Empleado', 'DotNet', '/Uploads/avatar_33Empleadoecaf2d23-e693-45b5-8173-fad153605c36.png', 'empleDotNet@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Empleado', '2024-09-27 01:57:33', 0);
 
 --
 -- Índices para tablas volcadas

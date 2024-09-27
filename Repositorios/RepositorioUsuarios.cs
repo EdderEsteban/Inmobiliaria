@@ -115,7 +115,9 @@ namespace Inmobiliaria.Repositorios
         // Método para crear un nuevo usuario
         public int CrearUsuario(Usuario usuario)
         {
-            Console.WriteLine($"Creando usuario: {usuario.Nombre} {usuario.Avatar}, {usuario.AvatarFile}");
+            Console.WriteLine(
+                $"Creando usuario: {usuario.Nombre} {usuario.Avatar}, {usuario.AvatarFile}"
+            );
 
             int resultado = -1;
             try
@@ -142,7 +144,7 @@ namespace Inmobiliaria.Repositorios
                             usuario.Apellido
                         );
                         command.Parameters.AddWithValue(
-                            $"@{nameof(Usuario.Avatar)}",  
+                            $"@{nameof(Usuario.Avatar)}",
                             usuario.Avatar
                         );
                         command.Parameters.AddWithValue($"@{nameof(Usuario.Email)}", usuario.Email);
@@ -172,21 +174,47 @@ namespace Inmobiliaria.Repositorios
             {
                 using (var connection = new MySqlConnection(ConnectionString))
                 {
+                    // Recuperar el avatar actual de la base de datos si no se proporciona un nuevo avatar
+                    string currentAvatar = usuario.Avatar;
+
+                    if (string.IsNullOrEmpty(usuario.Avatar))
+                    {
+                        // Si el avatar no viene en el objeto, lo obtenemos de la base de datos
+                        var getAvatarSql =
+                            @"SELECT Avatar 
+                            FROM usuario 
+                            WHERE Id_usuario = @Id AND borrado = 0";
+                        using (var getAvatarCommand = new MySqlCommand(getAvatarSql, connection))
+                        {
+                            getAvatarCommand.Parameters.AddWithValue("@Id", usuario.Id_usuario);
+                            connection.Open();
+                            var result = getAvatarCommand.ExecuteScalar();
+                            connection.Close();
+
+                            if (result != null)
+                            {
+                                currentAvatar = result.ToString();
+                            }
+                        }
+                    }
+
+                    // Ahora realizamos la actualización
                     var sql =
                         @$"UPDATE usuario SET {nameof(Usuario.Nombre)} = @Nombre, 
-                                    {nameof(Usuario.Apellido)} = @Apellido, 
-                                    {nameof(Usuario.Avatar)} = @Avatar, 
-                                    {nameof(Usuario.Email)} = @Email, 
-                                    {nameof(Usuario.Rol)} = @Rol
-                                WHERE {nameof(Usuario.Id_usuario)} = @Id AND borrado = 0;";
+                            {nameof(Usuario.Apellido)} = @Apellido, 
+                            {nameof(Usuario.Avatar)} = @Avatar, 
+                            {nameof(Usuario.Email)} = @Email, 
+                            {nameof(Usuario.Rol)} = @Rol
+                        WHERE {nameof(Usuario.Id_usuario)} = @Id AND borrado = 0;";
 
                     using (var command = new MySqlCommand(sql, connection))
                     {
+                        // Parámetros para la actualización
                         command.Parameters.AddWithValue("@Id", usuario.Id_usuario);
                         command.Parameters.AddWithValue("@Nombre", usuario.Nombre);
                         command.Parameters.AddWithValue("@Apellido", usuario.Apellido);
-                        command.Parameters.AddWithValue("@Avatar", usuario.Avatar);
-                        command.Parameters.AddWithValue("@Email", usuario.Email); 
+                        command.Parameters.AddWithValue("@Avatar", currentAvatar); // Usamos el avatar actual o el nuevo
+                        command.Parameters.AddWithValue("@Email", usuario.Email);
                         command.Parameters.AddWithValue("@Rol", usuario.Rol);
 
                         connection.Open();
