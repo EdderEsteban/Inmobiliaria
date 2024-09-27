@@ -101,19 +101,15 @@ namespace Inmobiliaria.Controllers
                         numBytesRequested: 256 / 8
                     )
                 );
-                
+
                 // Asigna la contraseña hasheada al usuario
                 usuario.Password = hashed;
 
                 // Genera un nuevo nombre aleatorio para el avatar (opcional)
                 var nbreRnd = Guid.NewGuid(); // Puedes usar este nombre si necesitas aleatoriedad
 
-                // Guarda el nuevo usuario en la base de datos
-                int res = repositorio.CrearUsuario(usuario);
-
-                
-                // Verifica si se ha subido un archivo de avatar 
-                if (usuario.AvatarFile != null )
+                // Verifica si se ha subido un archivo de avatar
+                if (usuario.AvatarFile != null)
                 {
                     // Obtiene la ruta donde se guardará el avatar
                     string wwwPath = environment.WebRootPath;
@@ -128,8 +124,8 @@ namespace Inmobiliaria.Controllers
                     // Genera un nombre de archivo único para el avatar usando el ID del usuario
                     string fileName =
                         "avatar_"
-                        + res
                         + usuario.Nombre
+                        + nbreRnd
                         + Path.GetExtension(usuario.AvatarFile.FileName);
                     string pathCompleto = Path.Combine(path, fileName);
                     usuario.Avatar = Path.Combine("/Uploads", fileName); // Guarda la ruta relativa del avatar
@@ -140,8 +136,8 @@ namespace Inmobiliaria.Controllers
                         usuario.AvatarFile.CopyTo(stream);
                     }
 
-                    // Actualiza la información del usuario con la ruta del avatar en la base de datos
-                    ModificarUser(usuario);
+                    // Guarda el nuevo usuario en la base de datos
+                    int res = repositorio.CrearUsuario(usuario);
                 }
 
                 // Redirige a la acción Index después de crear el usuario
@@ -169,21 +165,70 @@ namespace Inmobiliaria.Controllers
         public IActionResult ModificarUser(Usuario user)
         {
             Console.WriteLine($"El modelo es valido: {ModelState.IsValid}");
+
+            // Verifica si el modelo es válido
             if (ModelState.IsValid)
             {
-
-                int resultado = repositorio.ActualizarUsuario(user);
-
-                if (resultado > 0)
+                try
                 {
-                    return RedirectToAction("ListadoUsuarios");
+                    // Si se ha subido un archivo de avatar
+                    if (user.AvatarFile != null)
+                    {
+                        // Obtiene la ruta donde se guardará el avatar
+                        string wwwPath = environment.WebRootPath;
+                        string path = Path.Combine(wwwPath, "Uploads");
+
+                        // Crea el directorio si no existe
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        // Genera un nuevo nombre aleatorio para el avatar (opcional)
+                        var nbreRnd = Guid.NewGuid(); // Puedes usar este nombre si necesitas aleatoriedad
+
+                        // Genera un nombre de archivo único para el avatar
+                        string fileName =
+                            "avatar_"
+                            + user.Id_usuario
+                            + user.Nombre
+                            + nbreRnd
+                            + Path.GetExtension(user.AvatarFile.FileName);
+                        string pathCompleto = Path.Combine(path, fileName);
+
+                        // Guarda la ruta relativa del avatar en el campo Avatar
+                        user.Avatar = Path.Combine("/Uploads", fileName).Replace("\\", "/");
+
+                        // Guarda el archivo del avatar en la ruta especificada
+                        using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                        {
+                            user.AvatarFile.CopyTo(stream);
+                        }
+                    }
+
+                    // Llama al repositorio para actualizar el usuario en la base de datos
+                    int resultado = repositorio.ActualizarUsuario(user);
+
+                    // Verifica si la actualización fue exitosa
+                    if (resultado > 0)
+                    {
+                        TempData["SuccessMessage"] = "Usuario actualizado correctamente.";
+                        return RedirectToAction("ListadoUsuarios");
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] =
+                            "Ocurrió un error al actualizar el usuario. Intente nuevamente.";
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
+                    Console.WriteLine($"Error al actualizar el usuario: {ex.Message}");
                     TempData["ErrorMessage"] =
                         "Ocurrió un error al actualizar el usuario. Intente nuevamente.";
                 }
             }
+
+            // Si el modelo no es válido, regresa a la vista de edición
             return View("EditarUsuario", user);
         }
 
@@ -208,7 +253,7 @@ namespace Inmobiliaria.Controllers
         public IActionResult Login()
         {
             return View();
-        }    
+        }
 
         // Método para procesar el formulario de Login
         [HttpPost]
@@ -227,8 +272,6 @@ namespace Inmobiliaria.Controllers
                     HttpContext.Session.SetString("IdUsuario", user.Id_usuario.ToString());
                     HttpContext.Session.SetString("Nombre", user.Nombre);
                     HttpContext.Session.SetString("Rol", user.Rol.ToString());
-
-                    
 
                     // Redireccionar a la página principal del sistema
                     return RedirectToAction("Inicio", "Usuario");
@@ -251,7 +294,5 @@ namespace Inmobiliaria.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
-    
-
     }
 }

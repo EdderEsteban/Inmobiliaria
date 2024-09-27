@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-09-2024 a las 04:19:36
+-- Tiempo de generación: 27-09-2024 a las 06:58:11
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -597,7 +597,7 @@ CREATE TABLE `usuario` (
   `id_usuario` int(11) NOT NULL,
   `nombre` varchar(255) NOT NULL,
   `apellido` varchar(255) NOT NULL,
-  `avatar` varchar(500) NOT NULL,
+  `avatar` varchar(1000) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `rol` enum('Administrador','Empleado') NOT NULL,
@@ -610,8 +610,10 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `avatar`, `email`, `password`, `rol`, `fecha`, `borrado`) VALUES
-(9, 'Administrador', 'Edder', '', 'admin@inmo.com', '16170740', 'Administrador', '2024-09-26 17:54:18', 0),
-(15, 'Empleado', 'Edder', '', 'emple@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Empleado', '2024-09-26 20:04:55', 0);
+(30, 'Edder', 'Santibañez', '/Uploads/avatar_30Edderba3360fe-086f-4ab5-a8e2-7c7a3c2c8b0e.png', 'edder709@gmail.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Administrador', '2024-09-27 01:27:09', 0),
+(31, 'Edder', 'Santibañez', '/Uploads/avatar_31Edder.png', 'edder70@gmail.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Empleado', '2024-09-27 01:28:37', 0),
+(32, 'Edder', 'Santibañez', '/Uploads/avatar_32Edder26102dbe-cf43-44a2-88ac-974d84a5ae55.png', 'edder@gmail.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Administrador', '2024-09-27 01:37:12', 0),
+(33, 'Edder', 'Santibañez', '/Uploads\\avatar_Edder6bb2b680-9e65-439d-8c59-38cd87b7ee80.png', 'edder0@gmail.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Empleado', '2024-09-27 01:57:33', 0);
 
 --
 -- Índices para tablas volcadas
@@ -714,7 +716,7 @@ ALTER TABLE `tipo_inmueble`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- Restricciones para tablas volcadas
