@@ -133,7 +133,20 @@
                                         asp-action="BuscarInquilinoPago">Nuevo Pago</a></li>
                             </ul>
                         </li>
-                    </ul>
+                        <!-- Usuarios -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="material-symbols-outlined">person</i>Usuarios</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item text-black" asp-area="" asp-controller="Usuarios"
+                                        asp-action="ListadoUsuarios">Listado de Usuarios</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item text-black" asp-area="" asp-controller="Usuarios"
+                                        asp-action="CrearUsuario">Nuevo Usuario</a></li>
+                            </ul>
                 </div>
             </div>
         </nav>

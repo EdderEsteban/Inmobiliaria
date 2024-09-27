@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Inmobiliaria.Models;
 using Inmobiliaria.Repositorios;
 using Microsoft.AspNetCore.Mvc;
@@ -112,7 +111,8 @@ namespace Inmobiliaria.Controllers
             return View(pago);
         }
 
-       /* [HttpPost]
+       /* No lo uso porq no considero necesario actualizar un pago, si hay un error, deberia quedar registrado
+       [HttpPost]
         public IActionResult ActualizarPago(Pago pago)
         {
             if (ModelState.IsValid)
@@ -167,10 +167,7 @@ namespace Inmobiliaria.Controllers
             ViewBag.inquilino = inquilino;
             ViewBag.contrato = contrato;
             ViewBag.inmueble = inmueble;
-            // Lecturas
             
-            Console.WriteLine($"Inquilino: {inquilino.Nombre} {inquilino.Apellido}");
-            Console.WriteLine($"Inmueble: {inmueble.Direccion}");
             return View(detalle);
         }
 

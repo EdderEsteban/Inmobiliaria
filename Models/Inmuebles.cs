@@ -21,17 +21,26 @@ public class Inmuebles
     public int Cantidad_Ambientes { get; set; }
 
     [Required(ErrorMessage = "El campo Precio de Alquiler es obligatorio.")]
-    [Range(0, double.MaxValue, ErrorMessage = "El campo Precio de Alquiler debe ser mayor o igual a 0.")]
+    [Range(
+        0,
+        double.MaxValue,
+        ErrorMessage = "El campo Precio de Alquiler debe ser mayor o igual a 0."
+    )]
     public decimal Precio_Alquiler { get; set; }
 
     [Required(ErrorMessage = "El campo Latitud es obligatorio.")]
-    [RegularExpression("^[0-9.-]*$", ErrorMessage = "El campo Latitud solo debe contener números y el caracter '.'.")]
+    [RegularExpression(
+        "^[0-9.-]*$",
+        ErrorMessage = "El campo Latitud solo debe contener números y el caracter '.'."
+    )]
     public string? Latitud { get; set; }
 
     [Required(ErrorMessage = "El campo Longitud es obligatorio.")]
-    [RegularExpression("^[0-9.-]*$", ErrorMessage = "El campo Latitud solo debe contener números y el caracter '.'.")]
+    [RegularExpression(
+        "^[0-9.-]*$",
+        ErrorMessage = "El campo Latitud solo debe contener números y el caracter '.'."
+    )]
     public string? Longitud { get; set; }
-
 
     public Boolean Activo { get; set; }
 
@@ -41,19 +50,15 @@ public class Inmuebles
 
     public Propietarios? Propietarios { get; set; }
 
-
     public int Id_usuario { get; set; }
 
     public DateTime Fecha { get; set; } = DateTime.Now;
 
     public bool Borrado { get; set; }
-
 }
 
 public enum UsoInmueble
-
 {
     Comercial = 1,
     Residencial = 2
 }
-

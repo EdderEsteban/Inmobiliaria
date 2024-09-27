@@ -139,7 +139,7 @@ public class InmueblesController : Controller
     {
         //Enviar la lista de tipos de inmueble
         var listTipos = repositorio.ListarTiposInmueble();
-        ViewBag.tipos = listTipos;
+        ViewBag.tipos = listTipos; 
 
         //Enviar la lista de propietarios
         RepositorioPropietarios repoProp = new RepositorioPropietarios();

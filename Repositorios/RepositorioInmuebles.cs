@@ -31,7 +31,7 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
                 // Creación del comando SQL
                 using (var command = new MySqlCommand(sql, connection))
                 {
-                    // Apertura de la conexión
+                    // Apertura de la conexión 
                     connection.Open();
                     // Ejecución del comando y obtención de un lector de datos
                     using (var reader = command.ExecuteReader())
@@ -468,10 +468,7 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
 
             using (var command = new MySqlCommand(sql, connection))
             {
-                command.Parameters.AddWithValue(
-                    $"@{nameof(Inmuebles.Direccion)}",
-                    inmueble.Direccion
-                );
+                command.Parameters.AddWithValue($"@{nameof(Inmuebles.Direccion)}",inmueble.Direccion);
                 command.Parameters.AddWithValue($"@{nameof(Inmuebles.Uso)}", inmueble.Uso);
                 command.Parameters.AddWithValue($"@{nameof(Inmuebles.Id_tipo)}", inmueble.Id_tipo);
                 command.Parameters.AddWithValue(
