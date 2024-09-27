@@ -2,10 +2,12 @@ using System.Diagnostics;
 using Inmobiliaria.Models;
 using Inmobiliaria.Repositorios;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Inmobiliaria.Controllers;
 
 // Controlador para gestionar los propietarios
+[Authorize]
 public class InmueblesController : Controller
 {
     // Logger para registrar eventos y errores
@@ -162,7 +164,7 @@ public class InmueblesController : Controller
     }
 
     // Método para eliminar un inmueble
-
+    [Authorize(Policy= "Administrador")]
     public IActionResult EliminarInmueble(int id)
     {
         var contrato = new RepositorioContratos().InmuebleTieneContrato(id);

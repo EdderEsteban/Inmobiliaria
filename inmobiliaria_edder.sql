@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-09-2024 a las 07:09:53
+-- Tiempo de generación: 28-09-2024 a las 01:13:42
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -610,10 +610,10 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `avatar`, `email`, `password`, `rol`, `fecha`, `borrado`) VALUES
-(30, 'Administrador', 'Edder', '/Uploads/avatar_30Administrador3f38253e-8196-4823-9b5b-cd891e427468.png', 'admin@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Administrador', '2024-09-27 01:27:09', 0),
 (31, 'Empleado', 'Edder', '/Uploads/avatar_31Empleado33e553c9-cc10-46ff-9f78-cbb60281467b.png', 'emple@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Empleado', '2024-09-27 01:28:37', 0),
 (32, 'Jefe', 'DotNet', '/Uploads/avatar_32Jefe9d36cec6-0ebd-451a-a698-375ec4fecd9e.png', 'dotNet@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Administrador', '2024-09-27 01:37:12', 0),
-(33, 'Empleado', 'DotNet', '/Uploads/avatar_33Empleadoecaf2d23-e693-45b5-8173-fad153605c36.png', 'empleDotNet@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Empleado', '2024-09-27 01:57:33', 0);
+(33, 'Empleado', 'DotNet', '/Uploads/avatar_33Empleadoecaf2d23-e693-45b5-8173-fad153605c36.png', 'empleDotNet@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Empleado', '2024-09-27 01:57:33', 0),
+(34, 'Administrador', 'Edder', '/Uploads\\avatar_Administrador598ba919-9b9b-4129-94a3-5120f5429193.png', 'admin@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Administrador', '2024-09-27 16:11:54', 0);
 
 --
 -- Índices para tablas volcadas
@@ -716,7 +716,7 @@ ALTER TABLE `tipo_inmueble`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- Restricciones para tablas volcadas

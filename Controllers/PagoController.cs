@@ -1,9 +1,11 @@
 using Inmobiliaria.Models;
 using Inmobiliaria.Repositorios;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Inmobiliaria.Controllers
 {
+    [Authorize]
     public class PagoController : Controller
     {
         private readonly ILogger<PagoController> _logger;
@@ -135,6 +137,7 @@ namespace Inmobiliaria.Controllers
             return View("EditarPago", pago);
         }*/
 
+        [Authorize(Policy = "Administrador")]
         public IActionResult EliminarPago(int id)
         {
             try

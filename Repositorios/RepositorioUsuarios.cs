@@ -330,5 +330,56 @@ namespace Inmobiliaria.Repositorios
             }
             return usuario;
         }
+
+        // ----------------------------------------------------LOGIN----------------------------------------------------
+
+        public Usuario ObtenerPorEmail(string correo)
+        {
+            Usuario? usuario = null;
+            try
+            {
+                using (var connection = new MySqlConnection(ConnectionString))
+                {
+                    var sql =
+                        @$"SELECT {nameof(Usuario.Id_usuario)}, {nameof(Usuario.Nombre)}, 
+                            {nameof(Usuario.Apellido)}, {nameof(Usuario.Avatar)}, 
+                            {nameof(Usuario.Email)}, {nameof(Usuario.Rol)}, {nameof(Usuario.Password)}
+                            FROM usuario
+                            WHERE email = @email AND borrado = 0;";
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@email", correo);
+                        connection.Open();
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                // Manejo de los Enum en C#
+                                string uso = reader.GetString(nameof(Usuario.Rol));
+                                Roles RolEnum;
+                                Enum.TryParse(uso, out RolEnum);
+                                // Fin Manejo de los Enum en C#
+
+                                usuario = new Usuario
+                                {
+                                    Id_usuario = reader.GetInt32(nameof(Usuario.Id_usuario)),
+                                    Nombre = reader.GetString(nameof(Usuario.Nombre)),
+                                    Apellido = reader.GetString(nameof(Usuario.Apellido)),
+                                    Avatar = reader.GetString(nameof(Usuario.Avatar)),
+                                    Email = reader.GetString(nameof(Usuario.Email)),
+                                    Rol = RolEnum,
+                                    Password = reader.GetString(nameof(Usuario.Password))
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener el usuario con Email {correo}: {ex.Message}");
+            }
+            return usuario;
+        }
     }
 }

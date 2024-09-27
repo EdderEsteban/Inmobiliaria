@@ -17,9 +17,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Net.Http.Headers;
+using Org.BouncyCastle.Bcpg;
 
 namespace Inmobiliaria.Controllers
 {
+    [Authorize]
     public class UsuariosController : Controller
     {
         private readonly ILogger<UsuariosController> _logger;
@@ -41,6 +43,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // Método para listar los usuarios
+        [Authorize(Policy = "Administrador")]
         [HttpGet]
         public IActionResult ListadoUsuarios()
         {
@@ -49,6 +52,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // Método para obtener los detalles de un usuario por ID
+        [Authorize(Policy = "Administrador")]
         [HttpGet]
         public IActionResult DetalleUsuario(int id)
         {
@@ -61,6 +65,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // Método para la vista crear un nuevo usuario
+        [Authorize(Policy = "Administrador")]
         [HttpGet]
         public IActionResult CrearUsuario()
         {
@@ -68,8 +73,9 @@ namespace Inmobiliaria.Controllers
         }
 
         // Método para crear un nuevo usuario
+        [Authorize(Policy = "Administrador")]
         [HttpPost]
-        public IActionResult CrearUsuario(Usuario usuario)
+        public IActionResult NuevoUsuario(Usuario usuario)
         {
             var existe = repositorio.ExisteUsuario(usuario.Email);
 
@@ -156,16 +162,39 @@ namespace Inmobiliaria.Controllers
         [HttpGet]
         public IActionResult EditarUsuario(int id)
         {
-            var usuario = repositorio.ObtenerUsuarioPorId(id);
-            return View(usuario);
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            var UserId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var empleadoId = Convert.ToInt32(UserId);
+           
+            if (userRole == "Administrador")
+            {
+                
+                var usuario = repositorio.ObtenerUsuarioPorId(id);
+                return View(usuario);
+            }
+            else if (userRole == "Empleado")
+            {
+                if (empleadoId != id)
+                {
+                    var usuario = repositorio.ObtenerUsuarioPorId(empleadoId);
+                    TempData["ErrorMessage"] = "No tiene permisos para editar este usuario. Se redirecciona a su usuario.";
+                    return View(usuario);
+                }
+                else
+                {
+                    var usuario = repositorio.ObtenerUsuarioPorId(empleadoId);
+                    return View(usuario);
+                }
+
+                
+            }
+            return View("Login");
         }
 
         // Método para Modificar un usuario
         [HttpPost]
         public IActionResult ModificarUser(Usuario user)
         {
-            Console.WriteLine($"El modelo es valido: {ModelState.IsValid}");
-
             // Verifica si el modelo es válido
             if (ModelState.IsValid)
             {
@@ -211,8 +240,20 @@ namespace Inmobiliaria.Controllers
                     // Verifica si la actualización fue exitosa
                     if (resultado > 0)
                     {
-                        TempData["SuccessMessage"] = "Usuario actualizado correctamente.";
-                        return RedirectToAction("ListadoUsuarios");
+                        var userRole = User
+                            .Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)
+                            ?.Value;
+                        //Si es Administrador
+                        if (userRole == "Administrador")
+                        {
+                            TempData["SuccessMessage"] = "Usuario actualizado correctamente.";
+                            return RedirectToAction("ListadoUsuarios");
+                        }
+                        else if (userRole == "Empleado")
+                        {
+                            TempData["SuccessMessage"] = "Usuario actualizado correctamente.";
+                            return RedirectToAction("EditarUsuario", new { id = user.Id_usuario });
+                        }
                     }
                     else
                     {
@@ -232,6 +273,7 @@ namespace Inmobiliaria.Controllers
             return View("EditarUsuario", user);
         }
 
+        [Authorize(Policy = "Administrador")]
         // Método para eliminar un usuario
         public IActionResult EliminarUsuario(int id)
         {
@@ -248,7 +290,10 @@ namespace Inmobiliaria.Controllers
             return RedirectToAction("ListadoUsuarios");
         }
 
+        //------------------------------------------------------------LOGIN------------------------------------------------------------
+
         // Acceso a LoginIn
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Login()
         {
@@ -256,42 +301,90 @@ namespace Inmobiliaria.Controllers
         }
 
         // Método para procesar el formulario de Login
+        [AllowAnonymous]
         [HttpPost]
-        public IActionResult LoginIn(Login usuario)
+        public async Task<IActionResult> LoginIn(LoginView login)
         {
-            Console.WriteLine($"El modelo es valido: {ModelState.IsValid}");
-            // Validar si el modelo es correcto
-            if (ModelState.IsValid)
+            try
             {
-                // Verificar las credenciales del usuario
-                Usuario? user = repositorio.BuscarLogin(usuario.Email, usuario.Password);
+                // Redireccionamiento después del login, si no hay url de retorno se va a Home
+                var returnUrl = String.IsNullOrEmpty(TempData["returnUrl"] as string)
+                    ? "/Home"
+                    : TempData["returnUrl"].ToString();
 
-                if (user != null)
+                if (ModelState.IsValid)
                 {
-                    // Credenciales correctas, iniciamos sesión
-                    HttpContext.Session.SetString("IdUsuario", user.Id_usuario.ToString());
-                    HttpContext.Session.SetString("Nombre", user.Nombre);
-                    HttpContext.Session.SetString("Rol", user.Rol.ToString());
+                    // Hash de la contraseña utilizando el salt del archivo de configuración
+                    string hashedPassword = Convert.ToBase64String(
+                        KeyDerivation.Pbkdf2(
+                            password: login.Password,
+                            salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]), // Salt almacenado en config
+                            prf: KeyDerivationPrf.HMACSHA1,
+                            iterationCount: 1000,
+                            numBytesRequested: 256 / 8
+                        )
+                    );
 
-                    // Redireccionar a la página principal del sistema
-                    return RedirectToAction("Inicio", "Usuario");
+                    // Obtener usuario por email
+                    var usuario = repositorio.ObtenerPorEmail(login.Email); // Crear un repositorio
+
+                    // Verificar si el usuario existe y la contraseña es correcta
+                    if (usuario == null || usuario.Password != hashedPassword)
+                    {
+                        // Si el usuario no existe o la contraseña no coincide, mostrar error
+                        ModelState.AddModelError("", "El email o la contraseña no son correctos");
+                        TempData["ErrorMessage"] = "El email o la contraseña no son correctos.";
+                        TempData["returnUrl"] = returnUrl;
+                        return View("Login", login);
+                    }
+
+                    // Crear los claims (roles, email, nombre completo)
+                    var claims = new List<Claim>
+                    {
+                        new Claim("UserId", usuario.Id_usuario.ToString()),
+                        new Claim(ClaimTypes.Name, usuario.Email),
+                        new Claim("FullName", usuario.Nombre + " " + usuario.Apellido),
+                        new Claim(ClaimTypes.Role, usuario.Rol.ToString())
+                    };
+
+                    // Crear identidad con los claims y el esquema de autenticación de cookies
+                    var claimsIdentity = new ClaimsIdentity(
+                        claims,
+                        CookieAuthenticationDefaults.AuthenticationScheme
+                    );
+
+                    // Iniciar sesión utilizando cookies
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity)
+                    );
+
+                    // Limpiar TempData y edirigir a lar URL de retorno
+                    TempData.Remove("returnUrl");
+                    return View("InicioLogin");
                 }
-                else
-                {
-                    // Credenciales incorrectas, mostrar mensaje de error
-                    TempData["ErrorMessage"] = "Correo o contraseña incorrectos.";
-                }
+
+                // Si no es válido el modelo, volver a la vista de login
+                TempData["returnUrl"] = returnUrl;
+                TempData["ErrorMessage"] = "El email o la contraseña no son correctos.";
+                return View("Login", login);
             }
-
-            // Si algo falla, volvemos a mostrar el formulario con los errores
-            return View("Index", usuario);
+            catch (Exception ex)
+            {
+                // Manejo de errores generales
+                ModelState.AddModelError(
+                    "",
+                    "Ocurrió un error durante el proceso de login: " + ex.Message
+                );
+                return View("Login", login);
+            }
         }
 
         // Método para cerrar sesión
-        public IActionResult Logout()
+        [Route("salir", Name = "logout")]
+        public async Task<ActionResult> Logout()
         {
-            // Limpiar la sesión
-            HttpContext.Session.Clear();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
     }
