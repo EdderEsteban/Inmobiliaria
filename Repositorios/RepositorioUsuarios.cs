@@ -115,7 +115,8 @@ namespace Inmobiliaria.Repositorios
         // Método para crear un nuevo usuario
         public int CrearUsuario(Usuario usuario)
         {
-            Console.WriteLine($"Creando usuario: {usuario.Avatar}, {usuario.AvatarFile}");
+            Console.WriteLine($"Creando usuario: {usuario.Nombre} {usuario.Avatar}, {usuario.AvatarFile}");
+
             int resultado = -1;
             try
             {
@@ -166,7 +167,7 @@ namespace Inmobiliaria.Repositorios
         // Método para actualizar un usuario
         public int ActualizarUsuario(Usuario usuario)
         {
-            int resultado = -1;
+            int resultado = 0;
             try
             {
                 using (var connection = new MySqlConnection(ConnectionString))
@@ -185,7 +186,7 @@ namespace Inmobiliaria.Repositorios
                         command.Parameters.AddWithValue("@Nombre", usuario.Nombre);
                         command.Parameters.AddWithValue("@Apellido", usuario.Apellido);
                         command.Parameters.AddWithValue("@Avatar", usuario.Avatar);
-                        command.Parameters.AddWithValue("@Email", usuario.Email);
+                        command.Parameters.AddWithValue("@Email", usuario.Email); 
                         command.Parameters.AddWithValue("@Rol", usuario.Rol);
 
                         connection.Open();

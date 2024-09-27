@@ -111,10 +111,10 @@ namespace Inmobiliaria.Controllers
                 // Guarda el nuevo usuario en la base de datos
                 int res = repositorio.CrearUsuario(usuario);
 
-                // Verifica si se ha subido un archivo de avatar y si el ID del usuario es mayor que 0
-                if (usuario.AvatarFile != null && usuario.Id_usuario > 0)
+                
+                // Verifica si se ha subido un archivo de avatar 
+                if (usuario.AvatarFile != null )
                 {
-                    Console.WriteLine($"Entrando a guardar el avatar");
                     // Obtiene la ruta donde se guardará el avatar
                     string wwwPath = environment.WebRootPath;
                     string path = Path.Combine(wwwPath, "Uploads");
@@ -128,7 +128,8 @@ namespace Inmobiliaria.Controllers
                     // Genera un nombre de archivo único para el avatar usando el ID del usuario
                     string fileName =
                         "avatar_"
-                        + usuario.Id_usuario
+                        + res
+                        + usuario.Nombre
                         + Path.GetExtension(usuario.AvatarFile.FileName);
                     string pathCompleto = Path.Combine(path, fileName);
                     usuario.Avatar = Path.Combine("/Uploads", fileName); // Guarda la ruta relativa del avatar
@@ -140,7 +141,7 @@ namespace Inmobiliaria.Controllers
                     }
 
                     // Actualiza la información del usuario con la ruta del avatar en la base de datos
-                    repositorio.ActualizarUsuario(usuario);
+                    ModificarUser(usuario);
                 }
 
                 // Redirige a la acción Index después de crear el usuario
@@ -170,7 +171,9 @@ namespace Inmobiliaria.Controllers
             Console.WriteLine($"El modelo es valido: {ModelState.IsValid}");
             if (ModelState.IsValid)
             {
+
                 int resultado = repositorio.ActualizarUsuario(user);
+
                 if (resultado > 0)
                 {
                     return RedirectToAction("ListadoUsuarios");
