@@ -16,8 +16,10 @@ public class Pago
 
     public DateTime Fecha_Pago { get; set; } = DateTime.Now;
     
+    [Required]
     public decimal Monto { get; set; }
     
+    [Required]
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{dd/MM/yyyy}", ApplyFormatInEditMode = true)]
     public DateTime Periodo { get; set; }

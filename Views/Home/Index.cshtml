@@ -19,28 +19,11 @@
         </div>
     </div>
 </div>
-<div class="container mt-3 col-3">
+<div>
     <div class="card text-center">
         <div class="card-content">
             <div class="card-body">
-                <form asp-action="LoginIn" asp-asp-controller="Usuario" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="row mt-3">
-                        <div class="form-floating mb-3">
-                            <input asp-for="Email" class="form-control" placeholder="" />
-                            <label asp-for="Email" class="control-label">Email</label>
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input asp-for="Password" type="password" class="form-control" placeholder="" />
-                            <label asp-for="Password" class="control-label">Contraseña</label>
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <button type="submit" class="btn btn-success">Iniciar Sesión></button>
-                        </div>
-                    </div>
-                </form>
+                <a asp-action="Login" asp-controller="Usuarios" class="btn btn-success">Iniciar Sesión</a>
             </div>
         </div>
     </div>

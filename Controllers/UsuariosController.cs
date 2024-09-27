@@ -200,6 +200,13 @@ namespace Inmobiliaria.Controllers
             return RedirectToAction("ListadoUsuarios");
         }
 
+        // Acceso a LoginIn
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }    
+
         // Método para procesar el formulario de Login
         [HttpPost]
         public IActionResult LoginIn(Login usuario)
@@ -220,7 +227,7 @@ namespace Inmobiliaria.Controllers
                     
 
                     // Redireccionar a la página principal del sistema
-                    return RedirectToAction("Inicio", "Home");
+                    return RedirectToAction("Inicio", "Usuario");
                 }
                 else
                 {
