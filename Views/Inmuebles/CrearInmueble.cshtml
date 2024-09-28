@@ -6,6 +6,21 @@
     var listaTipos = (IList<InmuebleTipo>)ViewBag.tipos;
     var listaPropietarios = (IList<Propietarios>)ViewBag.propietarios;
 }
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
 <div class="text-center mb-4">
     <h2 class="display-4">Crear Inmueble</h2>
@@ -102,6 +117,7 @@
             <div class="form-group col-6 text-center mt-3">
                 <input type="submit" value="Guardar" class="btn btn-success w-25 mx-2" />
                 <a asp-action="ListadoTodosInmuebles" class="btn btn-primary w-25 mx-2">Volver</a>
+                <a asp-action="CrearTipo" class="btn btn-success w-25 mx-2">Add Tipo</a>
             </div>
         </div>
     </form>

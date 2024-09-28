@@ -1,11 +1,13 @@
 using System.Diagnostics;
 using Inmobiliaria.Models;
 using Inmobiliaria.Repositorios;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inmobiliaria.Controllers;
 
 // Controlador para gestionar los propietarios
+[Authorize]
 public class InmueblesController : Controller
 {
     // Logger para registrar eventos y errores
@@ -139,7 +141,7 @@ public class InmueblesController : Controller
     {
         //Enviar la lista de tipos de inmueble
         var listTipos = repositorio.ListarTiposInmueble();
-        ViewBag.tipos = listTipos; 
+        ViewBag.tipos = listTipos;
 
         //Enviar la lista de propietarios
         RepositorioPropietarios repoProp = new RepositorioPropietarios();
@@ -162,7 +164,7 @@ public class InmueblesController : Controller
     }
 
     // Método para eliminar un inmueble
-
+    [Authorize(Policy = "Administrador")]
     public IActionResult EliminarInmueble(int id)
     {
         var contrato = new RepositorioContratos().InmuebleTieneContrato(id);
@@ -250,5 +252,73 @@ public class InmueblesController : Controller
         var inmuebles = repositorio.ObtenerInmueblesPorDireccion(busqueda.Direccion);
 
         return Json(new { success = true, data = inmuebles });
+    }
+
+    // Metodo para listar los tipo de inmuebles
+    [HttpGet]
+    public IActionResult ListarTiposInmueble()
+    {
+        var lista = repositorio.ListarTiposInmueble();
+        return View("ListarTipo", lista);
+    }
+
+    // Metodo para crear un nuevo tipo de inmueble
+    [HttpGet]
+    public IActionResult CrearTipo()
+    {
+        return View();
+    }
+
+    // Metodo para guardar un nuevo tipo de inmueble
+    [HttpPost]
+    public IActionResult GuardarTipo([FromBody] InmuebleTipo tipo)
+    {
+        Console.WriteLine($"El tipo es: {tipo}");
+
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                repositorio.GuardarTipoInmueble(tipo);
+                return Json(new { success = true, message = "Tipo guardado con éxito" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al guardar el tipo: {ex.Message}");
+                return Json(
+                    new { success = false, message = "Error al guardar el tipo de inmueble" }
+                );
+            }
+        }
+
+        return Json(new { success = false, message = "Datos no válidos" });
+    }
+
+    // Metodo para Borrar un tipo de inmueble
+    [Authorize(Policy = "Administrador")]
+    
+    public IActionResult EliminarTipo(int id)
+    {
+        try
+        {
+            Console.WriteLine("Eliminando el tipo con ID: " + id);
+            // Intentar eliminar el inquilino desde el repositorio
+            repositorio.BorrarTipoInmueble(id);
+            // Establecer mensaje de éxito
+            TempData["SuccessMessage"] = "Tipo eliminado exitosamente.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            // Capturar la excepción específica y establecer el mensaje de error
+            TempData["ErrorMessage"] = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            // Capturar cualquier otra excepción y establecer un mensaje de error genérico
+            TempData["ErrorMessage"] = $"Ocurrió un error al eliminar el Tipo. {ex.Message}";
+        }
+
+        // Redirigir a la lista de propietarios
+        return RedirectToAction(nameof(ListarTiposInmueble));
     }
 }

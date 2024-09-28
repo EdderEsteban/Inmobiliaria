@@ -11,9 +11,6 @@ public class InmuebleTipo
     public string? Tipo { get; set; }
 
 
-    public InmuebleTipo()
-    {
-
-    }
+   
 
 }

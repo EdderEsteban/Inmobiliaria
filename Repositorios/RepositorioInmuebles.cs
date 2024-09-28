@@ -31,7 +31,7 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
                 // Creación del comando SQL
                 using (var command = new MySqlCommand(sql, connection))
                 {
-                    // Apertura de la conexión 
+                    // Apertura de la conexión
                     connection.Open();
                     // Ejecución del comando y obtención de un lector de datos
                     using (var reader = command.ExecuteReader())
@@ -451,6 +451,42 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
         return listado;
     }
 
+    // Metodo para guardar un tipo inmueble
+    public int GuardarTipoInmueble(InmuebleTipo tipo)
+    {
+        int Id = 0;
+        using (var connection = GetConnection())
+        {
+            var sql = "INSERT INTO tipo_inmueble (Tipo) VALUES (@Tipo);";
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Tipo", tipo.Tipo);
+                connection.Open();
+                Id = command.ExecuteNonQuery();
+            }
+        }
+        return Id;
+    }
+
+    // Metodo para borrar un tipo inmueble
+    public int BorrarTipoInmueble(int id)
+        {
+            using (var connection = GetConnection())
+            {
+                var sql =
+                    @$"DELETE FROM tipo_inmueble 
+                WHERE {nameof(InmuebleTipo.Id_tipo)} = @{nameof(InmuebleTipo.Id_tipo)}";
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue($"@{nameof(InmuebleTipo.Id_tipo)}", id);
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            return 0;
+        }
+
     // Método para guardar un nuevo inmueble
     public int GuardarNuevo(Inmuebles inmueble)
     {
@@ -468,7 +504,10 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
 
             using (var command = new MySqlCommand(sql, connection))
             {
-                command.Parameters.AddWithValue($"@{nameof(Inmuebles.Direccion)}",inmueble.Direccion);
+                command.Parameters.AddWithValue(
+                    $"@{nameof(Inmuebles.Direccion)}",
+                    inmueble.Direccion
+                );
                 command.Parameters.AddWithValue($"@{nameof(Inmuebles.Uso)}", inmueble.Uso);
                 command.Parameters.AddWithValue($"@{nameof(Inmuebles.Id_tipo)}", inmueble.Id_tipo);
                 command.Parameters.AddWithValue(
@@ -840,6 +879,7 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
     // Método para Eliminar Inmueble
     public int EliminarInmueble(int id)
     {
+        var resultado = 0;
         try
         {
             using (var connection = new MySqlConnection(ConnectionString))
@@ -856,7 +896,7 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
                     command.Parameters.AddWithValue("@Borrado", true); // Marca como borrado
 
                     connection.Open();
-                    return command.ExecuteNonQuery(); // Devuelve el número de filas afectadas
+                    resultado = command.ExecuteNonQuery(); // Devuelve el número de filas afectadas
                 }
             }
         }
@@ -865,5 +905,6 @@ public class RepositorioInmuebles : InmobiliariaBD.RepositorioBD
             // Manejo de excepciones y registro del error
             throw new Exception("Error al eliminar el inmueble", ex);
         }
+        return resultado;
     }
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-09-2024 a las 07:09:53
+-- Tiempo de generación: 28-09-2024 a las 05:53:27
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -183,10 +183,10 @@ INSERT INTO `inmueble` (`id_inmueble`, `direccion`, `uso`, `id_tipo`, `cantidad_
 (8, 'La Punta', 'Residencial', 1, 4, 56000.00, '-33.30228322937067', '-66.31959623517908', 1, 0, 1, NULL, '2024-04-25 00:01:35', 0),
 (9, '91510 Hermina Junction', 'Residencial', 3, 2, 0.00, '-20.9829904', '-40.9990597', 0, 0, 47, NULL, '2024-08-27 23:02:22', 0),
 (10, '95 Eastlawn Street', 'Residencial', 5, 1, 0.00, '5.668899', '-72.994095', 1, 1, 10, NULL, '2024-08-27 23:02:23', 0),
-(11, '3482 Emmet Circle', 'Comercial', 1, 1, 0.00, '-6.8055934', '110.7629067', 1, 1, 33, NULL, '2024-08-27 23:02:23', 0),
+(11, '3482 Emmet Circle', 'Comercial', 1, 1, 0.00, '-6.8055934', '110.7629067', 1, 1, 33, NULL, '2024-08-27 23:02:23', 1),
 (12, '70827 Brickson Park Terrace', 'Residencial', 5, 1, 0.00, '39.639488', '110.606483', 0, 1, 50, NULL, '2024-08-27 23:02:23', 0),
-(13, '03 Summer Ridge Alley', 'Comercial', 3, 3, 0.00, '41.5590095', '82.6211533', 0, 1, 12, NULL, '2024-08-27 23:02:23', 0),
-(14, '5955 Orin Hill', 'Residencial', 4, 4, 0.00, '35.83339', '102.6395', 0, 0, 46, NULL, '2024-08-27 23:02:23', 0),
+(13, '03 Summer Ridge Alley', 'Comercial', 3, 3, 0.00, '41.5590095', '82.6211533', 0, 1, 12, NULL, '2024-08-27 23:02:23', 1),
+(14, '5955 Orin Hill', 'Residencial', 4, 4, 0.00, '35.83339', '102.6395', 0, 0, 46, NULL, '2024-08-27 23:02:23', 1),
 (15, '3 International Circle', 'Comercial', 2, 3, 0.00, '41.117916', '19.610198', 1, 0, 44, NULL, '2024-08-27 23:02:23', 0),
 (16, '372 Iowa Point', 'Comercial', 5, 3, 0.00, '18.0435607', '100.1031202', 1, 1, 21, NULL, '2024-08-27 23:02:23', 0),
 (17, '0396 Carberry Drive', 'Comercial', 3, 2, 0.00, '47.2523491', '28.282907', 1, 0, 47, NULL, '2024-08-27 23:02:23', 0),
@@ -610,10 +610,10 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `avatar`, `email`, `password`, `rol`, `fecha`, `borrado`) VALUES
-(30, 'Administrador', 'Edder', '/Uploads/avatar_30Administrador3f38253e-8196-4823-9b5b-cd891e427468.png', 'admin@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Administrador', '2024-09-27 01:27:09', 0),
 (31, 'Empleado', 'Edder', '/Uploads/avatar_31Empleado33e553c9-cc10-46ff-9f78-cbb60281467b.png', 'emple@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Empleado', '2024-09-27 01:28:37', 0),
 (32, 'Jefe', 'DotNet', '/Uploads/avatar_32Jefe9d36cec6-0ebd-451a-a698-375ec4fecd9e.png', 'dotNet@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Administrador', '2024-09-27 01:37:12', 0),
-(33, 'Empleado', 'DotNet', '/Uploads/avatar_33Empleadoecaf2d23-e693-45b5-8173-fad153605c36.png', 'empleDotNet@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Empleado', '2024-09-27 01:57:33', 0);
+(33, 'Empleado', 'DotNet', '/Uploads/avatar_33Empleadoecaf2d23-e693-45b5-8173-fad153605c36.png', 'empleDotNet@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Empleado', '2024-09-27 01:57:33', 0),
+(34, 'Administrador', 'Edder', '/Uploads\\avatar_Administrador598ba919-9b9b-4129-94a3-5120f5429193.png', 'admin@inmo.com', 'nZLrGlPuD7oeOxgsbSbPJVQINrzjOomJ602TJpITeww=', 'Administrador', '2024-09-27 16:11:54', 0);
 
 --
 -- Índices para tablas volcadas
@@ -710,13 +710,13 @@ ALTER TABLE `propietario`
 -- AUTO_INCREMENT de la tabla `tipo_inmueble`
 --
 ALTER TABLE `tipo_inmueble`
-  MODIFY `id_tipo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_tipo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- Restricciones para tablas volcadas
