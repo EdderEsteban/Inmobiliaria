@@ -141,10 +141,9 @@ namespace Inmobiliaria.Controllers
                     {
                         usuario.AvatarFile.CopyTo(stream);
                     }
-
-                    // Guarda el nuevo usuario en la base de datos
-                    int res = repositorio.CrearUsuario(usuario);
                 }
+                // Guarda el nuevo usuario en la base de datos
+                int res = repositorio.CrearUsuario(usuario);
 
                 // Redirige a la acción Index después de crear el usuario
                 return RedirectToAction(nameof(ListadoUsuarios));
@@ -165,10 +164,9 @@ namespace Inmobiliaria.Controllers
             var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
             var UserId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             var empleadoId = Convert.ToInt32(UserId);
-           
+
             if (userRole == "Administrador")
             {
-                
                 var usuario = repositorio.ObtenerUsuarioPorId(id);
                 return View(usuario);
             }
@@ -177,7 +175,8 @@ namespace Inmobiliaria.Controllers
                 if (empleadoId != id)
                 {
                     var usuario = repositorio.ObtenerUsuarioPorId(empleadoId);
-                    TempData["ErrorMessage"] = "No tiene permisos para editar este usuario. Se redirecciona a su usuario.";
+                    TempData["ErrorMessage"] =
+                        "No tiene permisos para editar este usuario. Se redirecciona a su usuario.";
                     return View(usuario);
                 }
                 else
@@ -185,8 +184,6 @@ namespace Inmobiliaria.Controllers
                     var usuario = repositorio.ObtenerUsuarioPorId(empleadoId);
                     return View(usuario);
                 }
-
-                
             }
             return View("Login");
         }
@@ -290,6 +287,25 @@ namespace Inmobiliaria.Controllers
             return RedirectToAction("ListadoUsuarios");
         }
 
+        // Eliminar Avatar
+        public IActionResult EliminarAvatar(int id)
+        {
+            try
+            {
+                // Llama al método del repositorio para borrar el avatar
+                repositorio.BorrarAvatar(id);
+                TempData["SuccessMessage"] = "Avatar eliminado correctamente.";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar el Avatar: {ex.Message}");
+                TempData["ErrorMessage"] = "Error al eliminar el Avatar.";
+            }
+
+            // Redirige a la acción de editar usuario
+            return RedirectToAction("EditarUsuario", new { id });
+        }
+
         //------------------------------------------------------------LOGIN------------------------------------------------------------
 
         // Acceso a LoginIn
@@ -386,6 +402,98 @@ namespace Inmobiliaria.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
+        }
+
+        // Metodo para cambiar el Password
+        [Authorize]
+        [HttpPost]
+        public IActionResult CambiarPass([FromBody] CambioPass pass)
+        {
+            try
+            {
+                // Obtener el usuario y verificar el id
+                var usuario = repositorio.ObtenerUsuarioPorId(pass.Id_usuario);
+                if (usuario == null)
+                {
+                    return Json(new { success = false, message = "Usuario no encontrado" });
+                }
+
+                // Verificar si las contraseñas coinciden
+                if (pass.Password != pass.ConfirmPassword)
+                {
+                    return Json(new { success = false, message = "Las contraseñas no coinciden" });
+                }
+
+                // Hashear la nueva contraseña
+                string hashedNewPassword = Convert.ToBase64String(
+                    KeyDerivation.Pbkdf2(
+                        password: pass.Password,
+                        salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                        prf: KeyDerivationPrf.HMACSHA1,
+                        iterationCount: 1000,
+                        numBytesRequested: 256 / 8
+                    )
+                );
+
+                // Actualizar la contraseña en la base de datos
+                repositorio.CambiarPassword(pass.Id_usuario, hashedNewPassword);
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones
+                return Json(
+                    new
+                    {
+                        success = false,
+                        message = "Error al actualizar la contraseña: " + ex.Message
+                    }
+                );
+            }
+        }
+
+        // Método para blanquear la contraseña
+        [Authorize]
+        [HttpPost]
+        public IActionResult BlanquearPass([FromBody] CambioPass pass)
+        {
+            try
+            {
+                // Obtener el usuario y verificar el id
+                var usuario = repositorio.ObtenerUsuarioPorId(pass.Id_usuario);
+                if (usuario == null)
+                {
+                    return Json(new { success = false, message = "Usuario no encontrado" });
+                }
+
+                // Hashear la nueva contraseña
+                string passBlanca = Convert.ToBase64String(
+                    KeyDerivation.Pbkdf2(
+                        password: pass.Email,
+                        salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                        prf: KeyDerivationPrf.HMACSHA1,
+                        iterationCount: 1000,
+                        numBytesRequested: 256 / 8
+                    )
+                );
+
+                // Actualizar la contraseña en la base de datos
+                repositorio.CambiarPassword(pass.Id_usuario, passBlanca);
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones
+                return Json(
+                    new
+                    {
+                        success = false,
+                        message = "Error al actualizar la contraseña: " + ex.Message
+                    }
+                );
+            }
         }
     }
 }

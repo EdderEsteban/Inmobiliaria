@@ -15,9 +15,9 @@ public class Usuario
     [Required(ErrorMessage = "El apellido es obligatorio")]
     public string? Apellido { get; set; }
 
-    [Column("avatar")]
     public string? Avatar { get; set; } = "";
 
+    [NotMapped]
     public IFormFile? AvatarFile { get; set; }
 
     [Required, EmailAddress(ErrorMessage = "El email es obligatorio")]

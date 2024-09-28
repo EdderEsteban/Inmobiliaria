@@ -331,6 +331,49 @@ namespace Inmobiliaria.Repositorios
             return usuario;
         }
 
+         // Método para borrar el avatar de un usuario
+        public int BorrarAvatar(int idUsuario)
+        {
+            int resultado = 0;
+            try
+            {
+                using (var connection = new MySqlConnection(ConnectionString))
+                {
+                    
+                    var getAvatarSql =
+                        @"SELECT Avatar 
+                                 FROM usuario 
+                                 WHERE Id_usuario = @Id AND borrado = 0";
+                    using (var getAvatarCommand = new MySqlCommand(getAvatarSql, connection))
+                    {
+                        getAvatarCommand.Parameters.AddWithValue("@Id", idUsuario);
+                        connection.Open();
+                        var result = getAvatarCommand.ExecuteScalar();
+                        connection.Close();
+
+                        
+                    }
+
+                    // Ahora realizamos la actualización para borrar el avatar
+                    var sql =
+                        @$"UPDATE usuario SET {nameof(Usuario.Avatar)} = '' 
+                        WHERE {nameof(Usuario.Id_usuario)} = @Id AND borrado = 0;";
+
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id", idUsuario);
+                        connection.Open();
+                        resultado = command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return resultado;
+        }
+
         // ----------------------------------------------------LOGIN----------------------------------------------------
 
         public Usuario ObtenerPorEmail(string correo)
@@ -380,6 +423,30 @@ namespace Inmobiliaria.Repositorios
                 Console.WriteLine($"Error al obtener el usuario con Email {correo}: {ex.Message}");
             }
             return usuario;
+        }
+
+        public int CambiarPassword(int id, string password)
+        {
+            int resultado = 0;
+            try
+            {
+                using (var connection = new MySqlConnection(ConnectionString))
+                {
+                    var sql = @$"UPDATE Usuario SET password = @password WHERE id_usuario = @id;";
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@password", password);
+                        command.Parameters.AddWithValue("@id", id);
+                        connection.Open();
+                        resultado = command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return resultado;
         }
     }
 }
