@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,25 +12,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 		options.LoginPath = "/Usuarios/Login";
 		options.LogoutPath = "/Usuarios/Logout";
 		options.AccessDeniedPath = "/Home/Restringido";
-		options.ExpireTimeSpan = TimeSpan.FromMinutes(5);//Tiempo de expiración
+		//options.ExpireTimeSpan = TimeSpan.FromMinutes(5);//Tiempo de expiración
 	});
 
-    // Políticas de Autorización
-builder.Services.AddAuthorization(options =>
+    // Politicas de Autorizacion
+    builder.Services.AddAuthorization(options =>
 {
-    // Política para Administradores
-    options.AddPolicy("Administrador", policy =>
-        policy.RequireClaim(ClaimTypes.Role, "Administrador"));
-
-    // Política para Empleados
-    options.AddPolicy("Empleado", policy =>
-        policy.RequireClaim(ClaimTypes.Role, "Empleado"));
-
-    // Política combinada para Administradores y Empleados
-    options.AddPolicy("AdministradorOEmpleado", policy =>
-        policy.RequireClaim(ClaimTypes.Role, "Administrador", "Empleado"));
+	//options.AddPolicy("Empleado", policy => policy.RequireClaim(ClaimTypes.Role, "Administrador", "Empleado"));
+	options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador", "Empleado"));
 });
-
 
 var app = builder.Build();
 

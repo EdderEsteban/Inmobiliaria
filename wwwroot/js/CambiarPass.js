@@ -1,1 +1,0 @@
-console.log("Ingreso a CambiarPass.js");

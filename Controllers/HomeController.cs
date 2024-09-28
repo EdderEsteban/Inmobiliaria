@@ -29,7 +29,7 @@ public class HomeController : Controller
     
     
     
-    public IActionResult Restringido()
+    public IActionResult Privacy()
     {
         return View();
     }

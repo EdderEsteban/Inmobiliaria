@@ -2,12 +2,10 @@ using System.Diagnostics;
 using Inmobiliaria.Models;
 using Inmobiliaria.Repositorios;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Inmobiliaria.Controllers;
 
 // Controlador para gestionar los inquilinos
-[Authorize]
 public class InquilinosController : Controller
 {
     // Logger para registrar eventos y errores
@@ -68,7 +66,6 @@ public class InquilinosController : Controller
     }
 
     // Método para eliminar un inquilino existente
-    [Authorize(Policy = "Administrador")]
     public IActionResult EliminarInquilino(int id)
     {
         try

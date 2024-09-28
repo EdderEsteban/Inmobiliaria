@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Login
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -22,10 +23,7 @@
     <div class="card text-center">
         <div class="card-content">
             <div class="card-body">
-                @if (!User.Identity.IsAuthenticated) // Verifica si el usuario NO está autenticado
-                {
-                    <a asp-action="Login" asp-controller="Usuarios" class="btn btn-success">Iniciar Sesión</a>
-                }
+                <a asp-action="Login" asp-controller="Usuarios" class="btn btn-success">Iniciar Sesión</a>
             </div>
         </div>
     </div>
