@@ -38,6 +38,9 @@ public class InquilinosController : Controller
     {
         if (ModelState.IsValid) //Asegurarse q es valido el modelo
         {
+            // Asigna el Usuario que creo el registro
+            var UserId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            inquilino.Id_usuario = int.Parse(UserId);
             repositorio.GuardarNuevo(inquilino);
             return RedirectToAction(nameof(ListadoInquilinos));
         }
@@ -101,7 +104,7 @@ public class InquilinosController : Controller
 
     // Método para recibir el formulario Search
     [HttpPost]
-    public IActionResult BuscarInq([FromBody] BusquedaInquilinos busqueda) 
+    public IActionResult BuscarInq([FromBody] BusquedaInquilinos busqueda)
     {
         var resultados = repositorio.BuscarInquilinos(busqueda);
 

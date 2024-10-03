@@ -52,29 +52,24 @@ public class RepositorioInquilinos : InmobiliariaBD.RepositorioBD
         using (var connection = GetConnection())
         {
             var sql =
-                @$"INSERT INTO inquilino ({nameof(Inquilinos.Nombre)}, {nameof(Inquilinos.Apellido)}, 
-                {nameof(Inquilinos.Dni)}, {nameof(Inquilinos.Direccion)}, {nameof(Inquilinos.Telefono)}, {nameof(Inquilinos.Correo)})
-                VALUES (@{nameof(Inquilinos.Nombre)}, @{nameof(Inquilinos.Apellido)}, @{nameof(Inquilinos.Dni)},
-                @{nameof(Inquilinos.Direccion)}, @{nameof(Inquilinos.Telefono)}, @{nameof(Inquilinos.Correo)});
-                SELECT LAST_INSERT_ID();";
+            @$"INSERT INTO inquilino 
+              ({nameof(Inquilinos.Nombre)}, {nameof(Inquilinos.Apellido)}, {nameof(Inquilinos.Dni)}, 
+               {nameof(Inquilinos.Direccion)}, {nameof(Inquilinos.Telefono)}, {nameof(Inquilinos.Correo)}, {nameof(Inquilinos.Id_usuario)})
+              VALUES 
+              (@{nameof(Inquilinos.Nombre)}, @{nameof(Inquilinos.Apellido)}, @{nameof(Inquilinos.Dni)}, 
+               @{nameof(Inquilinos.Direccion)}, @{nameof(Inquilinos.Telefono)}, @{nameof(Inquilinos.Correo)}, @{nameof(Inquilinos.Id_usuario)});
+              SELECT LAST_INSERT_ID();";
 
             using (var comand = new MySqlCommand(sql, connection))
             {
+                // Asignar valores a los parámetros
                 comand.Parameters.AddWithValue($"@{nameof(Inquilinos.Nombre)}", inquilino.Nombre);
-                comand.Parameters.AddWithValue(
-                    $"@{nameof(Inquilinos.Apellido)}",
-                    inquilino.Apellido
-                );
+                comand.Parameters.AddWithValue($"@{nameof(Inquilinos.Apellido)}", inquilino.Apellido);
                 comand.Parameters.AddWithValue($"@{nameof(Inquilinos.Dni)}", inquilino.Dni);
-                comand.Parameters.AddWithValue(
-                    $"@{nameof(Inquilinos.Direccion)}",
-                    inquilino.Direccion
-                );
-                comand.Parameters.AddWithValue(
-                    $"@{nameof(Inquilinos.Telefono)}",
-                    inquilino.Telefono
-                );
+                comand.Parameters.AddWithValue($"@{nameof(Inquilinos.Direccion)}", inquilino.Direccion);
+                comand.Parameters.AddWithValue($"@{nameof(Inquilinos.Telefono)}", inquilino.Telefono);
                 comand.Parameters.AddWithValue($"@{nameof(Inquilinos.Correo)}", inquilino.Correo);
+                comand.Parameters.AddWithValue($"@{nameof(Inquilinos.Id_usuario)}", inquilino.Id_usuario);
 
                 connection.Open();
 
@@ -126,11 +121,11 @@ public class RepositorioInquilinos : InmobiliariaBD.RepositorioBD
 
     // [Actualizar Inquilino] 
     public void ActualizarInquilino(Inquilinos inquilino)
-{
-    using (var connection = GetConnection())
     {
-        var sql =
-            @$"UPDATE inquilino SET
+        using (var connection = GetConnection())
+        {
+            var sql =
+                @$"UPDATE inquilino SET
                 {nameof(Inquilinos.Nombre)} = @{nameof(Inquilinos.Nombre)},
                 {nameof(Inquilinos.Apellido)} = @{nameof(Inquilinos.Apellido)},
                 {nameof(Inquilinos.Dni)} = @{nameof(Inquilinos.Dni)},
@@ -139,47 +134,47 @@ public class RepositorioInquilinos : InmobiliariaBD.RepositorioBD
                 {nameof(Inquilinos.Correo)} = @{nameof(Inquilinos.Correo)}
             WHERE {nameof(Inquilinos.Id_inquilino)} = @{nameof(Inquilinos.Id_inquilino)}";
 
-        
-        using (var command = new MySqlCommand(sql, connection))
-                {
-            // Agregar parámetros de forma segura
-            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Nombre)}", inquilino.Nombre);
-            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Apellido)}", inquilino.Apellido);
-            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Dni)}", inquilino.Dni);
-            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Direccion)}", inquilino.Direccion);
-            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Telefono)}", inquilino.Telefono);
-            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Correo)}", inquilino.Correo);
-            command.Parameters.AddWithValue($"@{nameof(Inquilinos.Id_inquilino)}", inquilino.Id_inquilino);
 
-            connection.Open();
-            command.ExecuteNonQuery();
-            // La conexión se cerrará automáticamente al salir del 'using'
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                // Agregar parámetros de forma segura
+                command.Parameters.AddWithValue($"@{nameof(Inquilinos.Nombre)}", inquilino.Nombre);
+                command.Parameters.AddWithValue($"@{nameof(Inquilinos.Apellido)}", inquilino.Apellido);
+                command.Parameters.AddWithValue($"@{nameof(Inquilinos.Dni)}", inquilino.Dni);
+                command.Parameters.AddWithValue($"@{nameof(Inquilinos.Direccion)}", inquilino.Direccion);
+                command.Parameters.AddWithValue($"@{nameof(Inquilinos.Telefono)}", inquilino.Telefono);
+                command.Parameters.AddWithValue($"@{nameof(Inquilinos.Correo)}", inquilino.Correo);
+                command.Parameters.AddWithValue($"@{nameof(Inquilinos.Id_inquilino)}", inquilino.Id_inquilino);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+                // La conexión se cerrará automáticamente al salir del 'using'
+            }
         }
     }
-}
 
 
     // Método para eliminar un inquilino por su ID
     // [Eliminar Inquilino]
-        public int EliminarInquilino(int id)
+    public int EliminarInquilino(int id)
+    {
+        using (var connection = GetConnection())
         {
-            using (var connection = GetConnection())
-            {
-                var sql =
-                    @$"DELETE FROM inquilino 
+            var sql =
+                @$"DELETE FROM inquilino 
                 WHERE {nameof(Inquilinos.Id_inquilino)} = @{nameof(Inquilinos.Id_inquilino)}";
-                using (var command = new MySqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue($"@{nameof(Inquilinos.Id_inquilino)}", id);
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                    connection.Close();
-                }
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue($"@{nameof(Inquilinos.Id_inquilino)}", id);
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
             }
-            return 0;
         }
-    
-    
+        return 0;
+    }
+
+
     // Método para buscar propietarios
     public IList<Inquilinos> BuscarInquilinos(BusquedaInquilinos busqueda)
     {
@@ -196,7 +191,7 @@ public class RepositorioInquilinos : InmobiliariaBD.RepositorioBD
                     AND (@Apellido IS NULL OR {nameof(Inquilinos.Apellido)} LIKE CONCAT('%', @Apellido, '%'))
                     AND (@Dni IS NULL OR {nameof(Inquilinos.Dni)} LIKE CONCAT('%', @Dni, '%'))";
 
-                using (var command = new MySqlCommand(sql, connection)) 
+                using (var command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue(
                         "@Nombre",

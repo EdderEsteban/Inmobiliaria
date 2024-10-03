@@ -3,6 +3,7 @@ using Inmobiliaria.Models;
 using Inmobiliaria.Repositorios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Org.BouncyCastle.Utilities;
 
 namespace Inmobiliaria.Controllers;
 
@@ -45,6 +46,9 @@ public class PropietariosController : Controller
         // Verificar si el modelo es válido
         if (ModelState.IsValid)
         {
+            // Asigna el Usuario que creo el registro
+            var UserId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            propietario.Id_usuario = int.Parse(UserId);
             // Guardar el propietario en el repositorio
             repositorio.GuardarNuevo(propietario);
             // Redirección a la lista de propietarios

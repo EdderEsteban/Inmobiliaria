@@ -72,9 +72,13 @@ namespace Inmobiliaria.Controllers
                 try
                 {
                     var pagado = repositorio.ExistePago(pago);
-                    Console.WriteLine($"resultado de pago: {pagado}");
+
                     if (!pagado) // Solo guarda si el pago no existe
                     {
+                        // Asigna el Usuario que creo el registro
+                        var UserId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                        pago.Id_Usuario = int.Parse(UserId);
+                        
                         repositorio.GuardarNuevo(pago);
                         TempData["SuccessMessage"] = "El pago se guardó exitosamente."; // Mensaje de éxito
                         return RedirectToAction(nameof(ListadoPagos));
@@ -113,29 +117,29 @@ namespace Inmobiliaria.Controllers
             return View(pago);
         }
 
-       /* No lo uso porq no considero necesario actualizar un pago, si hay un error, deberia quedar registrado
-       [HttpPost]
-        public IActionResult ActualizarPago(Pago pago)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    repositorio.ActualizarPago(pago);
-                    TempData["SuccessMessage"] = "Pago actualizado exitosamente.";
-                    return RedirectToAction(nameof(ListadoPagos));
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error al actualizar el pago.");
-                    ModelState.AddModelError(
-                        "",
-                        "Ocurrió un error al actualizar el pago. Intente nuevamente."
-                    );
-                }
-            }
-            return View("EditarPago", pago);
-        }*/
+        /* No lo uso porq no considero necesario actualizar un pago, si hay un error, deberia quedar registrado
+        [HttpPost]
+         public IActionResult ActualizarPago(Pago pago)
+         {
+             if (ModelState.IsValid)
+             {
+                 try
+                 {
+                     repositorio.ActualizarPago(pago);
+                     TempData["SuccessMessage"] = "Pago actualizado exitosamente.";
+                     return RedirectToAction(nameof(ListadoPagos));
+                 }
+                 catch (Exception ex)
+                 {
+                     _logger.LogError(ex, "Error al actualizar el pago.");
+                     ModelState.AddModelError(
+                         "",
+                         "Ocurrió un error al actualizar el pago. Intente nuevamente."
+                     );
+                 }
+             }
+             return View("EditarPago", pago);
+         }*/
 
         [Authorize(Policy = "Administrador")]
         public IActionResult EliminarPago(int id)
@@ -170,7 +174,7 @@ namespace Inmobiliaria.Controllers
             ViewBag.inquilino = inquilino;
             ViewBag.contrato = contrato;
             ViewBag.inmueble = inmueble;
-            
+
             return View(detalle);
         }
 

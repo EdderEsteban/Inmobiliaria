@@ -74,9 +74,9 @@ public class RepositorioPropietarios : InmobiliariaBD.RepositorioBD
                 // Consulta SQL para insertar un nuevo propietario y obtener el ID generado
                 var sql =
                     @$"INSERT INTO propietario ({nameof(Propietarios.Nombre)}, {nameof(Propietarios.Apellido)}, 
-                    {nameof(Propietarios.Dni)}, {nameof(Propietarios.Direccion)}, {nameof(Propietarios.Telefono)}, {nameof(Propietarios.Correo)})
+                    {nameof(Propietarios.Dni)}, {nameof(Propietarios.Direccion)}, {nameof(Propietarios.Telefono)}, {nameof(Propietarios.Correo)}, {nameof(Propietarios.Id_usuario)})
                     VALUES (@{nameof(Propietarios.Nombre)}, @{nameof(Propietarios.Apellido)}, @{nameof(Propietarios.Dni)},
-                    @{nameof(Propietarios.Direccion)}, @{nameof(Propietarios.Telefono)}, @{nameof(Propietarios.Correo)});
+                    @{nameof(Propietarios.Direccion)}, @{nameof(Propietarios.Telefono)}, @{nameof(Propietarios.Correo)}, @{nameof(Propietarios.Id_usuario)});
                     SELECT LAST_INSERT_ID();";
 
                 using (var command = new MySqlCommand(sql, connection))
@@ -105,6 +105,10 @@ public class RepositorioPropietarios : InmobiliariaBD.RepositorioBD
                     command.Parameters.AddWithValue(
                         $"@{nameof(Propietarios.Correo)}",
                         propietario.Correo
+                    );
+                    command.Parameters.AddWithValue(
+                        $"@{nameof(Propietarios.Id_usuario)}",
+                        propietario.Id_usuario
                     );
 
                     connection.Open();

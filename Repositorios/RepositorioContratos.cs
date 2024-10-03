@@ -3,6 +3,7 @@ using System.Text;
 using Inmobiliaria.Models;
 using MySql.Data.MySqlClient;
 
+
 namespace Inmobiliaria.Repositorios;
 
 // Clase RepositorioPropietarios que hereda de RepositorioBD
@@ -154,9 +155,10 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
         int id = 0;
         using (var connection = new MySqlConnection(ConnectionString))
         {
+            
             var sql =
                 @"INSERT INTO contrato (id_inquilino, id_inmueble, monto, fecha_inicio, fecha_fin)
-                            VALUES (@id_inquilino, @id_inmueble, @monto, @fecha_inicio, @fecha_fin);
+                            VALUES (@id_inquilino, @id_inmueble, @monto, @fecha_inicio, @fecha_fin, @usuario);
                             SELECT LAST_INSERT_ID();";
             using (var command = new MySqlCommand(sql, connection))
             {
@@ -165,6 +167,7 @@ public class RepositorioContratos : InmobiliariaBD.RepositorioBD
                 command.Parameters.AddWithValue("@monto", contrato.Monto);
                 command.Parameters.AddWithValue("@fecha_inicio", contrato.Fecha_inicio);
                 command.Parameters.AddWithValue("@fecha_fin", contrato.Fecha_fin);
+                command.Parameters.AddWithValue("@usuario", contrato.Id_usuario);
 
                 connection.Open();
                 id = Convert.ToInt32(command.ExecuteScalar());

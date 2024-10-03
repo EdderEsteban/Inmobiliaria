@@ -45,11 +45,12 @@ public class RepositorioPago : InmobiliariaBD.RepositorioBD
     public int GuardarNuevo(Pago pago)
     {
         int id = 0;
+       
         using (var connection = new MySqlConnection(ConnectionString))
         {
             var sql =
-                @"INSERT INTO pago (id_contrato, fecha_pago, monto, periodo, id_inquilino) 
-                        VALUES (@id_contrato, @fecha_pago, @monto, @periodo, @id_inquilino); 
+                @"INSERT INTO pago (id_contrato, fecha_pago, monto, periodo, id_inquilino, id_Usuario) 
+                        VALUES (@id_contrato, @fecha_pago, @monto, @periodo, @id_inquilino, @id_Usuario); 
                         SELECT LAST_INSERT_ID();";
             using (var command = new MySqlCommand(sql, connection))
             {
@@ -58,6 +59,7 @@ public class RepositorioPago : InmobiliariaBD.RepositorioBD
                 command.Parameters.AddWithValue("@monto", pago.Monto);
                 command.Parameters.AddWithValue("@periodo", pago.Periodo);
                 command.Parameters.AddWithValue("@id_inquilino", pago.Id_Inquilino);
+                command.Parameters.AddWithValue("@id_Usuario", pago.Id_Usuario);
 
                 connection.Open();
                 id = Convert.ToInt32(command.ExecuteScalar());
@@ -175,7 +177,7 @@ public class RepositorioPago : InmobiliariaBD.RepositorioBD
 
                     // Si el conteo es mayor que 0, significa que existe el pago
                     resultado = count > 0;
-                    Console.WriteLine($"Existe el pago: {resultado}");
+                    
                 }
             }
         }
